@@ -1,0 +1,77 @@
+// =============================================================================
+// Enums
+// =============================================================================
+
+enum FileStatus {
+  PENDING // Processing (virus scan, etc.)
+  READY // Available for download
+  FAILED // Processing failed
+}
+
+// =============================================================================
+// Models
+// =============================================================================
+
+/// Temporary upload records - cleaned up after expiry
+model PendingUpload {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  sessionKey  String // Groups uploads in a form session
+  fileKey     String @unique // R2 key: "uploads/{id}"
+  fileName    String
+  fileSize    Int
+  contentType String
+
+  // Optional: pre-declare what this will attach to
+  entityType String? // "Claim", "Document", etc.
+  category   String? // "receipt", "evidence", "attachment"
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId, sessionKey])
+  @@index([expiresAt])
+  @@map("pending_uploads")
+}
+
+/// Committed files - linked to any entity via polymorphic reference
+model File {
+  id String @id @default(cuid())
+
+  // Polymorphic reference
+  entityType String // "Claim", "Document", "Ticket", "Policy", "Invoice", etc.
+  entityId   String // The parent record's ID
+
+  // Storage
+  fileKey     String @unique // R2 key: "files/{id}"
+  fileName    String
+  fileSize    Int
+  contentType String
+  category    String? // Entity-specific: "receipt", "evidence", etc.
+  path        String? // Folder-like hierarchy: "/invoices/2024/"
+
+  // Processing status
+  status       FileStatus @default(READY)
+  errorMessage String?
+  processedAt  DateTime?
+
+  // Soft delete
+  deletedAt DateTime?
+
+  // Audit
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([entityType, entityId, category])
+  @@index([entityType, entityId, path])
+  @@index([fileName])
+  @@index([status])
+  @@index([deletedAt])
+  @@index([createdById])
+  @@index([createdAt])
+  @@map("files")
+}

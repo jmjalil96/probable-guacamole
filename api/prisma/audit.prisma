@@ -1,0 +1,46 @@
+model AuditLog {
+  id String @id @default(cuid())
+
+  // WHO
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId String?
+  session   Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  // WHAT
+  action   String
+  resource String
+  severity AuditSeverity @default(INFO)
+
+  // WHERE
+  resourceId String?
+
+  // CHANGE TRACKING
+  oldValue Json?
+  newValue Json?
+
+  // CONTEXT
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  requestId String?
+
+  // WHEN
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([resource, resourceId])
+  @@index([action])
+  @@index([severity])
+  @@index([createdAt])
+  @@index([resource, resourceId, createdAt])
+  @@index([userId, createdAt])
+  @@map("audit_logs")
+}
+
+enum AuditSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}

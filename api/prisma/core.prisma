@@ -1,0 +1,38 @@
+model Client {
+  id       String  @id @default(cuid())
+  name     String
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Profile relations
+  affiliates   Affiliate[]
+  agents       AgentClient[]
+  clientAdmins ClientAdminClient[]
+
+  // Claims
+  claims Claim[]
+
+  // Policies
+  policies Policy[]
+
+  // Invoices
+  invoices Invoice[]
+
+  // Tickets
+  tickets Ticket[]
+
+  // Documents
+  documentAccess DocumentAccess[]
+
+  @@map("clients")
+}
+
+model GlobalCounter {
+  id        String   @id
+  value     Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@map("global_counters")
+}

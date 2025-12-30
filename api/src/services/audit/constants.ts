@@ -1,0 +1,20 @@
+// Action constants - extend as needed
+export const AuditActions = {
+  // Auth
+  LOGIN: "LOGIN",
+  LOGOUT: "LOGOUT",
+  LOGIN_FAILED: "LOGIN_FAILED",
+  PASSWORD_CHANGED: "PASSWORD_CHANGED",
+  PASSWORD_RESET_REQUESTED: "PASSWORD_RESET_REQUESTED",
+  // CRUD
+  CREATE: "CREATE",
+  UPDATE: "UPDATE",
+  DELETE: "DELETE",
+  // Business
+  INVITATION_SENT: "INVITATION_SENT",
+  INVITATION_ACCEPTED: "INVITATION_ACCEPTED",
+  ROLE_ASSIGNED: "ROLE_ASSIGNED",
+  STATUS_CHANGE: "STATUS_CHANGE",
+} as const;
+
+export type AuditAction = (typeof AuditActions)[keyof typeof AuditActions];
