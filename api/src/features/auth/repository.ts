@@ -26,6 +26,11 @@ export async function incrementFailedAttemptsAndMaybeLock(
         THEN NOW()
         ELSE "lockedAt"
       END,
+      "sessionsInvalidBefore" = CASE
+        WHEN "failedLoginAttempts" + 1 >= ${maxAttempts} AND "lockedAt" IS NULL
+        THEN NOW()
+        ELSE "sessionsInvalidBefore"
+      END,
       "updatedAt" = NOW()
     WHERE id = ${userId}
     RETURNING "failedLoginAttempts", "lockedAt"

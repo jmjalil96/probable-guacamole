@@ -148,6 +148,20 @@ describe("POST /auth/login - Integration Tests", () => {
       expect(updatedUser!.lockedAt).not.toBeNull();
     });
 
+    it("should invalidate all sessions when account is locked", async () => {
+      const user = await testUserFactories.withFailedAttempts(testRoleId, 4);
+
+      await request(app)
+        .post("/auth/login")
+        .send({ email: user.email, password: WRONG_PASSWORD });
+
+      const updatedUser = await db.user.findUnique({
+        where: { id: user.id },
+      });
+
+      expect(updatedUser!.sessionsInvalidBefore).not.toBeNull();
+    });
+
     it("should not lock account before reaching threshold", async () => {
       const user = await testUserFactories.withFailedAttempts(testRoleId, 3);
 

@@ -1,3 +1,3 @@
 export * from "./service.js";
-export * from "./schemas.js";
+export * from "shared";
 export { default as authRouter } from "./routes.js";

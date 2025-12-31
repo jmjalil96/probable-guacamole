@@ -4,12 +4,14 @@ import { verificationTemplate } from "./verification.js";
 import { passwordResetTemplate } from "./password-reset.js";
 import { welcomeTemplate } from "./welcome.js";
 import { accountLockedTemplate } from "./account-locked.js";
+import { invitationTemplate } from "./invitation.js";
 
 const templates = {
   verification: verificationTemplate,
   "password-reset": passwordResetTemplate,
   welcome: welcomeTemplate,
   "account-locked": accountLockedTemplate,
+  invitation: invitationTemplate,
 } as const;
 
 export const renderTemplate = (

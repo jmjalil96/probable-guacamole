@@ -15,7 +15,8 @@ export type TemplateId =
   | "verification"
   | "password-reset"
   | "welcome"
-  | "account-locked";
+  | "account-locked"
+  | "invitation";
 
 export interface VerificationTemplateData {
   token: string;
@@ -35,9 +36,17 @@ export interface AccountLockedTemplateData {
   baseUrl: string;
 }
 
+export interface InvitationTemplateData {
+  token: string;
+  roleName: string;
+  expiresAt: string;
+  baseUrl: string;
+}
+
 export type TemplateDataMap = {
   verification: VerificationTemplateData;
   "password-reset": PasswordResetTemplateData;
   welcome: WelcomeTemplateData;
   "account-locked": AccountLockedTemplateData;
+  invitation: InvitationTemplateData;
 };

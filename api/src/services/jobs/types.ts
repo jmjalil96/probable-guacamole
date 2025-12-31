@@ -2,7 +2,8 @@ export type JobType =
   | "email:verification"
   | "email:password-reset"
   | "email:welcome"
-  | "email:account-locked";
+  | "email:account-locked"
+  | "email:invitation";
 
 export type JobPayloads = {
   "email:verification": {
@@ -22,6 +23,12 @@ export type JobPayloads = {
   "email:account-locked": {
     to: string;
     userId: string;
+  };
+  "email:invitation": {
+    to: string;
+    token: string;
+    roleName: string;
+    expiresAt: string;
   };
 };
 

@@ -1,15 +1,14 @@
 import { Router } from "express";
-import { env } from "../../config/env.js";
 import { validate } from "../../middleware/validate.js";
-import { SESSION_COOKIE_NAME } from "./constants.js";
-import { loginSchema } from "./schemas.js";
+import { loginRequestSchema, type LoginResponse } from "shared";
 import { login } from "./service.js";
+import { setSessionCookie } from "./utils.js";
 
 const router = Router();
 
 router.post(
   "/login",
-  validate({ body: loginSchema }),
+  validate({ body: loginRequestSchema }),
   async (req, res, next) => {
     try {
       const requestId = res.locals.requestId as string | undefined;
@@ -21,15 +20,10 @@ router.post(
         ...(requestId && { requestId }),
       });
 
-      res.cookie(SESSION_COOKIE_NAME, sessionToken, {
-        httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        expires: expiresAt,
-      });
+      setSessionCookie(res, sessionToken, expiresAt);
 
-      res.json({ success: true });
+      const response: LoginResponse = { success: true };
+      res.json(response);
     } catch (err) {
       next(err);
     }

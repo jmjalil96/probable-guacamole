@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -7,6 +8,7 @@ import { requestLogger } from "./middleware/request-logger.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { AppError } from "./lib/errors.js";
 import { authRouter } from "./features/auth/index.js";
+import { invitationRouter } from "./features/invitation/index.js";
 
 const app = express();
 
@@ -31,6 +33,7 @@ app.use(
 );
 
 app.use(requestLogger);
+app.use(cookieParser());
 app.use(express.json({ limit: "100kb" }));
 
 app.get("/", (_req, res) => {
@@ -38,6 +41,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/auth/invitations", invitationRouter);
 
 app.use((req, _res, next) => {
   next(AppError.notFound(`${req.method} ${req.path}`));

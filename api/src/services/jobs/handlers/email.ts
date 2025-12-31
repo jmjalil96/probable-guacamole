@@ -29,6 +29,13 @@ const accountLockedSchema = z.object({
   userId: z.string().min(1),
 });
 
+const invitationSchema = z.object({
+  to: z.string().email(),
+  token: z.string().min(1),
+  roleName: z.string().min(1),
+  expiresAt: z.string().min(1),
+});
+
 export const handleEmailJob = async (job: EmailJob) => {
   const log = createJobLogger(job.id ?? "unknown", job.name);
   const jobId = job.id;
@@ -56,6 +63,17 @@ export const handleEmailJob = async (job: EmailJob) => {
       const data = accountLockedSchema.parse(job.data);
       await sendEmail(data.to, "account-locked", {}, jobId);
       log.info({ to: data.to }, "account locked email sent");
+      return;
+    }
+    case "email:invitation": {
+      const data = invitationSchema.parse(job.data);
+      await sendEmail(
+        data.to,
+        "invitation",
+        { token: data.token, roleName: data.roleName, expiresAt: data.expiresAt },
+        jobId
+      );
+      log.info({ to: data.to }, "invitation email sent");
       return;
     }
     default: {
