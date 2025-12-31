@@ -53,3 +53,20 @@ export function setSessionCookie(
     expires: expiresAt,
   });
 }
+
+export function clearSessionCookie(res: Response): void {
+  res.clearCookie(SESSION_COOKIE_NAME, {
+    httpOnly: true,
+    secure: env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+}
+
+/**
+ * Performs dummy argon2 verification to prevent timing attacks.
+ * Used when user doesn't exist to keep response time constant.
+ */
+export async function performDummyPasswordWork(): Promise<void> {
+  await argon2.verify(DUMMY_PASSWORD_HASH, "dummy-password-value");
+}

@@ -3,6 +3,7 @@ export const SESSION_EXPIRY_DAYS = 30;
 export const SESSION_TOKEN_BYTES = 32;
 export const SESSION_COOKIE_NAME = "sid";
 export const SESSION_ACTIVITY_STALENESS_MS = 5 * 60 * 1000;
+export const PASSWORD_RESET_EXPIRY_HOURS = 1;
 
 // Pre-computed argon2 hash for timing attack prevention.
 // Used when user doesn't exist to keep response time constant.

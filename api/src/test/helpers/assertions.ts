@@ -54,3 +54,27 @@ export function expectUnauthorized(res: Response) {
   const body = res.body as ErrorResponseBody;
   expect(body.error.message).toBe("Invalid credentials");
 }
+
+/**
+ * Assert that session cookie has been cleared.
+ */
+export function expectCookieCleared(res: Response): void {
+  const cookies = res.headers["set-cookie"] as string[] | string | undefined;
+  expect(cookies).toBeDefined();
+
+  const cookieArray = Array.isArray(cookies) ? cookies : [cookies!];
+  const sessionCookie = cookieArray.find((c: string) =>
+    c.startsWith(`${SESSION_COOKIE_NAME}=`)
+  );
+
+  expect(sessionCookie).toBeDefined();
+  // Cookie should have empty value (sid=;) indicating it was cleared
+  expect(sessionCookie).toContain(`${SESSION_COOKIE_NAME}=;`);
+}
+
+/**
+ * Assert not found response with specific error code.
+ */
+export function expectNotFound(res: Response, code: string) {
+  expectErrorResponse(res, 404, code);
+}
