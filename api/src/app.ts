@@ -6,6 +6,7 @@ import { env } from "./config/env.js";
 import { requestLogger } from "./middleware/request-logger.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { AppError } from "./lib/errors.js";
+import { authRouter } from "./features/auth/index.js";
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use(express.json({ limit: "100kb" }));
 app.get("/", (_req, res) => {
   res.json({ message: "Hello from Express v5!" });
 });
+
+app.use("/auth", authRouter);
 
 app.use((req, _res, next) => {
   next(AppError.notFound(`${req.method} ${req.path}`));

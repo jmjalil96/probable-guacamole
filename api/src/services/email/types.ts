@@ -11,7 +11,11 @@ export interface EmailTemplate<T = unknown> {
   text: (data: T) => string;
 }
 
-export type TemplateId = "verification" | "password-reset" | "welcome";
+export type TemplateId =
+  | "verification"
+  | "password-reset"
+  | "welcome"
+  | "account-locked";
 
 export interface VerificationTemplateData {
   token: string;
@@ -27,8 +31,13 @@ export interface WelcomeTemplateData {
   baseUrl: string;
 }
 
+export interface AccountLockedTemplateData {
+  baseUrl: string;
+}
+
 export type TemplateDataMap = {
   verification: VerificationTemplateData;
   "password-reset": PasswordResetTemplateData;
   welcome: WelcomeTemplateData;
+  "account-locked": AccountLockedTemplateData;
 };

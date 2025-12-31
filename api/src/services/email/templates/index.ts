@@ -3,11 +3,13 @@ import type { TemplateId, EmailMessage } from "../types.js";
 import { verificationTemplate } from "./verification.js";
 import { passwordResetTemplate } from "./password-reset.js";
 import { welcomeTemplate } from "./welcome.js";
+import { accountLockedTemplate } from "./account-locked.js";
 
 const templates = {
   verification: verificationTemplate,
   "password-reset": passwordResetTemplate,
   welcome: welcomeTemplate,
+  "account-locked": accountLockedTemplate,
 } as const;
 
 export const renderTemplate = (

@@ -1,7 +1,8 @@
 export type JobType =
   | "email:verification"
   | "email:password-reset"
-  | "email:welcome";
+  | "email:welcome"
+  | "email:account-locked";
 
 export type JobPayloads = {
   "email:verification": {
@@ -15,6 +16,10 @@ export type JobPayloads = {
     token: string;
   };
   "email:welcome": {
+    to: string;
+    userId: string;
+  };
+  "email:account-locked": {
     to: string;
     userId: string;
   };

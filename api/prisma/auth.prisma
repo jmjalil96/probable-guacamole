@@ -8,6 +8,10 @@ model User {
   sessionsInvalidBefore DateTime?
   isActive              Boolean   @default(true)
 
+  // Account locking
+  failedLoginAttempts Int       @default(0)
+  lockedAt            DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
