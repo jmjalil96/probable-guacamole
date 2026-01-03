@@ -160,7 +160,8 @@ export type MigrateToEntityInput = {
 
 export async function migrateToEntity(
   pendingUploadId: string,
-  input: MigrateToEntityInput
+  input: MigrateToEntityInput,
+  userId: string
 ) {
   // 1. Fetch pending upload
   const pendingUpload = await db.pendingUpload.findUnique({
@@ -171,13 +172,28 @@ export async function migrateToEntity(
     throw AppError.notFound("Pending upload");
   }
 
+  // 2. Validate ownership
+  if (pendingUpload.userId !== userId) {
+    throw AppError.forbidden("Not authorized to access this upload");
+  }
+
+  // 3. Validate entityType if pre-declared
+  if (
+    pendingUpload.entityType &&
+    pendingUpload.entityType !== input.entityType
+  ) {
+    throw AppError.badRequest("Entity type mismatch", {
+      code: "ENTITY_TYPE_MISMATCH",
+    });
+  }
+
   if (pendingUpload.expiresAt <= new Date()) {
     throw AppError.badRequest("Pending upload expired", {
       code: "PENDING_UPLOAD_EXPIRED",
     });
   }
 
-  // 2. Verify file exists in R2
+  // 4. Verify file exists in R2
   const metadata = await r2.headObject(pendingUpload.fileKey);
   if (!metadata) {
     throw AppError.badRequest("File not found in storage", {
@@ -190,13 +206,13 @@ export async function migrateToEntity(
     fileSize: pendingUpload.fileSize,
   });
 
-  // 3. Generate permanent key and copy
+  // 5. Generate permanent key and copy
   const fileId = createId();
   const permanentKey = `files/${fileId}`;
 
   await r2.copyObject(pendingUpload.fileKey, permanentKey);
 
-  // 4. DB transaction: create File + delete PendingUpload
+  // 6. DB transaction: create File + delete PendingUpload
   let file: Awaited<ReturnType<typeof db.file.create>>;
   try {
     file = await db.$transaction(async (tx) => {

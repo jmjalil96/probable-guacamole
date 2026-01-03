@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuditSeverity, Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import type { AuditSeverity, PrismaClient } from "@prisma/client";
 import { db } from "../../config/db.js";
 import { logger } from "../../lib/logger.js";
 import { AuditActions } from "./constants.js";
@@ -41,27 +42,8 @@ type TransactionClient = Omit<
   "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
 >;
 
-type DecimalLike = {
-  d: number[];
-  e: number;
-  s: number;
-  toFixed: () => string;
-};
-
 // Max size for JSON fields (64KB)
 const MAX_JSON_SIZE = 64 * 1024;
-
-const isDecimalLike = (value: unknown): value is DecimalLike => {
-  if (value == null || typeof value !== "object") return false;
-  const candidate = value as DecimalLike;
-
-  return (
-    Array.isArray(candidate.d) &&
-    typeof candidate.e === "number" &&
-    typeof candidate.s === "number" &&
-    typeof candidate.toFixed === "function"
-  );
-};
 
 /**
  * Recursively sanitize values for JSON storage.
@@ -75,7 +57,7 @@ function sanitizeValue(value: unknown, seen: WeakSet<object>): JsonValue {
   if (typeof value === "bigint") return value.toString();
   if (value instanceof Date) return value.toISOString();
   if (Buffer.isBuffer(value)) return value.toString("base64");
-  if (isDecimalLike(value)) return value.toFixed();
+  if (Prisma.Decimal.isDecimal(value)) return value.toString();
 
   if (Array.isArray(value)) {
     return value.map((item) => sanitizeValue(item, seen));

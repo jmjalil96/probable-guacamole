@@ -8,6 +8,7 @@ export const AuditActions = {
   PASSWORD_RESET_REQUESTED: "PASSWORD_RESET_REQUESTED",
   // CRUD
   CREATE: "CREATE",
+  READ: "READ",
   UPDATE: "UPDATE",
   DELETE: "DELETE",
   // Business
@@ -15,6 +16,8 @@ export const AuditActions = {
   INVITATION_ACCEPTED: "INVITATION_ACCEPTED",
   ROLE_ASSIGNED: "ROLE_ASSIGNED",
   STATUS_CHANGE: "STATUS_CHANGE",
+  // Files
+  FILE_UPLOAD_INITIATED: "FILE_UPLOAD_INITIATED",
 } as const;
 
 export type AuditAction = (typeof AuditActions)[keyof typeof AuditActions];

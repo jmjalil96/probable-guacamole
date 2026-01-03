@@ -99,7 +99,7 @@ model Policy {
   updatedAt DateTime @updatedAt
 
   cancellationReason String?
-  cancelledAt        DateTime?
+  cancelledAt        DateTime? @db.Date
 
   enrollments       PolicyEnrollment[]
   claims            Claim[]

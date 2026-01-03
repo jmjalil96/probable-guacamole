@@ -13,12 +13,17 @@
     "./schemas/auth": {
       "types": "./dist/schemas/auth.d.ts",
       "default": "./dist/schemas/auth.js"
+    },
+    "./schemas/claim-state-machine": {
+      "types": "./dist/schemas/claim-state-machine.d.ts",
+      "default": "./dist/schemas/claim-state-machine.js"
     }
   },
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
     "zod": "^4.2.1"
   },
   "devDependencies": {

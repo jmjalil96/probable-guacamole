@@ -28,11 +28,3 @@ model Client {
 
   @@map("clients")
 }
-
-model GlobalCounter {
-  id        String   @id
-  value     Int      @default(0)
-  updatedAt DateTime @updatedAt
-
-  @@map("global_counters")
-}

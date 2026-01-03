@@ -8,6 +8,8 @@ import { requestLogger } from "./middleware/request-logger.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { AppError } from "./lib/errors.js";
 import { authRouter } from "./features/auth/index.js";
+import { claimFilesRouter } from "./features/claims/files/index.js";
+import { claimsRouter } from "./features/claims/index.js";
 import { invitationRouter } from "./features/invitation/index.js";
 
 const app = express();
@@ -42,6 +44,8 @@ app.get("/", (_req, res) => {
 
 app.use("/auth", authRouter);
 app.use("/auth/invitations", invitationRouter);
+app.use("/claims", claimsRouter);
+app.use("/claims/files", claimFilesRouter);
 
 app.use((req, _res, next) => {
   next(AppError.notFound(`${req.method} ${req.path}`));

@@ -111,3 +111,10 @@ model ClaimInvoice {
   @@map("claim_invoices")
 }
 
+model GlobalCounter {
+  id        String   @id
+  value     Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@map("global_counters")
+}

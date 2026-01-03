@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cookieParser from "cookie-parser";
 import { authRouter } from "../../features/auth/index.js";
 import { invitationRouter } from "../../features/invitation/index.js";
+import { claimsRouter } from "../../features/claims/index.js";
 import { errorHandler } from "../../middleware/error-handler.js";
 
 /**
@@ -22,6 +23,9 @@ export function createTestApp(): Express {
   // Mount auth routes
   app.use("/auth", authRouter);
   app.use("/auth/invitations", invitationRouter);
+
+  // Mount feature routes
+  app.use("/claims", claimsRouter);
 
   // Error handler must be last
   app.use(errorHandler);
