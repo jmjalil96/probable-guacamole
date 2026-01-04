@@ -120,7 +120,7 @@ function LoginPage() {
           error={errors.password?.message}
           labelAction={
             <Link
-              to="/"
+              to="/forgot-password"
               className="text-sm font-medium text-primary hover:text-primary-hover transition-colors"
             >
               ¿Olvidaste tu contraseña?

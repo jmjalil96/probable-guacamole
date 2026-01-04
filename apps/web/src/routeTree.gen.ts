@@ -13,8 +13,12 @@ import { Route as TestRouteImport } from './routes/test'
 import { Route as BrandRouteImport } from './routes/brand'
 import { Route as GuestRouteImport } from './routes/_guest'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as GuestResetPasswordRouteImport } from './routes/_guest/reset-password'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
+import { Route as GuestForgotPasswordRouteImport } from './routes/_guest/forgot-password'
+import { Route as GuestAcceptInvitationRouteImport } from './routes/_guest/accept-invitation'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_app'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/_app/index'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -34,28 +38,53 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedRoute,
+const GuestResetPasswordRoute = GuestResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => GuestRoute,
 } as any)
 const GuestLoginRoute = GuestLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => GuestRoute,
 } as any)
+const GuestForgotPasswordRoute = GuestForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestAcceptInvitationRoute = GuestAcceptInvitationRouteImport.update({
+  id: '/accept-invitation',
+  path: '/accept-invitation',
+  getParentRoute: () => GuestRoute,
+} as any)
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/brand': typeof BrandRoute
   '/test': typeof TestRoute
+  '/accept-invitation': typeof GuestAcceptInvitationRoute
+  '/forgot-password': typeof GuestForgotPasswordRoute
   '/login': typeof GuestLoginRoute
-  '/': typeof AuthenticatedIndexRoute
+  '/reset-password': typeof GuestResetPasswordRoute
+  '/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesByTo {
   '/brand': typeof BrandRoute
   '/test': typeof TestRoute
+  '/accept-invitation': typeof GuestAcceptInvitationRoute
+  '/forgot-password': typeof GuestForgotPasswordRoute
   '/login': typeof GuestLoginRoute
-  '/': typeof AuthenticatedIndexRoute
+  '/reset-password': typeof GuestResetPasswordRoute
+  '/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -63,22 +92,44 @@ export interface FileRoutesById {
   '/_guest': typeof GuestRouteWithChildren
   '/brand': typeof BrandRoute
   '/test': typeof TestRoute
+  '/_authenticated/_app': typeof AuthenticatedAppRouteWithChildren
+  '/_guest/accept-invitation': typeof GuestAcceptInvitationRoute
+  '/_guest/forgot-password': typeof GuestForgotPasswordRoute
   '/_guest/login': typeof GuestLoginRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_guest/reset-password': typeof GuestResetPasswordRoute
+  '/_authenticated/_app/': typeof AuthenticatedAppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/brand' | '/test' | '/login' | '/'
+  fullPaths:
+    | '/brand'
+    | '/test'
+    | '/accept-invitation'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/brand' | '/test' | '/login' | '/'
+  to:
+    | '/brand'
+    | '/test'
+    | '/accept-invitation'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/'
   id:
     | '__root__'
     | '/_authenticated'
     | '/_guest'
     | '/brand'
     | '/test'
+    | '/_authenticated/_app'
+    | '/_guest/accept-invitation'
+    | '/_guest/forgot-password'
     | '/_guest/login'
-    | '/_authenticated/'
+    | '/_guest/reset-password'
+    | '/_authenticated/_app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,12 +169,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/': {
-      id: '/_authenticated/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/_guest/reset-password': {
+      id: '/_guest/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof GuestResetPasswordRouteImport
+      parentRoute: typeof GuestRoute
     }
     '/_guest/login': {
       id: '/_guest/login'
@@ -132,15 +183,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRoute
     }
+    '/_guest/forgot-password': {
+      id: '/_guest/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof GuestForgotPasswordRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/_guest/accept-invitation': {
+      id: '/_guest/accept-invitation'
+      path: '/accept-invitation'
+      fullPath: '/accept-invitation'
+      preLoaderRoute: typeof GuestAcceptInvitationRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/_authenticated/_app': {
+      id: '/_authenticated/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/_app/': {
+      id: '/_authenticated/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
+interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+}
+
+const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+}
+
+const AuthenticatedAppRouteWithChildren =
+  AuthenticatedAppRoute._addFileChildren(AuthenticatedAppRouteChildren)
+
 interface AuthenticatedRouteChildren {
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAppRoute: typeof AuthenticatedAppRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedAppRoute: AuthenticatedAppRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -148,11 +238,17 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 interface GuestRouteChildren {
+  GuestAcceptInvitationRoute: typeof GuestAcceptInvitationRoute
+  GuestForgotPasswordRoute: typeof GuestForgotPasswordRoute
   GuestLoginRoute: typeof GuestLoginRoute
+  GuestResetPasswordRoute: typeof GuestResetPasswordRoute
 }
 
 const GuestRouteChildren: GuestRouteChildren = {
+  GuestAcceptInvitationRoute: GuestAcceptInvitationRoute,
+  GuestForgotPasswordRoute: GuestForgotPasswordRoute,
   GuestLoginRoute: GuestLoginRoute,
+  GuestResetPasswordRoute: GuestResetPasswordRoute,
 }
 
 const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)

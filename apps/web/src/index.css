@@ -6,7 +6,7 @@
   --color-primary: #0835a0;
   --color-primary-hover: #0a3db8;
   --color-primary-dark: #062a7a;
-  --color-accent: #ffd8d8;
+  --color-accent: #ffcaca;
   --color-alert: #ed3500;
   --color-alert-light: #fee2e2;
   --color-background: #fffcfb;
@@ -19,6 +19,9 @@
   --color-text-muted: #666666;
   --color-text-light: #999999;
   --color-sidebar-muted: #8a9dc4;
+  --color-sidebar: #0835a0;
+  --color-sidebar-hover: #0a3db8;
+  --color-sidebar-text: #fffcfb;
 
   /* Font Families */
   --font-sans: "DM Sans", system-ui, sans-serif;

@@ -19,6 +19,7 @@ export interface LogoProps {
   variant?: LogoVariant;
   size?: LogoSize;
   showTagline?: boolean;
+  collapsed?: boolean;
   className?: string;
 }
 
@@ -26,6 +27,7 @@ export function Logo({
   variant = "dark",
   size = "md",
   showTagline = false,
+  collapsed = false,
   className,
 }: LogoProps) {
   const colors = variantClasses[variant];
@@ -39,9 +41,17 @@ export function Logo({
           colors.base
         )}
       >
-        Cotizate<span className={colors.highlight}>Algo</span>
+        {collapsed ? (
+          <>
+            C<span className={colors.highlight}>A</span>
+          </>
+        ) : (
+          <>
+            Cotizate<span className={colors.highlight}>Algo</span>
+          </>
+        )}
       </h1>
-      {showTagline && (
+      {showTagline && !collapsed && (
         <p
           className={cn(
             "mt-1 text-[10px] font-normal uppercase tracking-[0.2em]",

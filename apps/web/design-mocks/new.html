@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuevo Reclamo Mock - CotizateAlgo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0835a0;
+      --primary-hover: #0a3db8;
+      --background: #fffcfb;
+      --accent: #ffd8d8;
+      --alert: #ed3500;
+      --success: #16a34a;
+      --text: #1a1a1a;
+      --text-muted: #666666;
+      --text-light: #999999;
+      --border: #e8e8e8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(to bottom right, var(--background), rgba(8, 53, 160, 0.02));
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ==========================================
+       FORM CONTAINER
+       ========================================== */
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ==========================================
+       HEADER
+       ========================================== */
+    .form-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(232, 232, 232, 0.6);
+      background: rgba(255, 252, 251, 0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    .form-header__content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+    }
+
+    .form-header__left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .form-header__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(8, 53, 160, 0.1);
+    }
+
+    .form-header__icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+
+    .form-header__title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+
+    .form-header__subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-header__actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ==========================================
+       BUTTONS
+       ========================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 20px;
+      height: 40px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn--outline {
+      border: 1px solid var(--border);
+      background: var(--background);
+      color: var(--text);
+    }
+
+    .btn--outline:hover {
+      border-color: var(--text-light);
+      background: rgba(232, 232, 232, 0.3);
+    }
+
+    .btn--primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(8, 53, 160, 0.25);
+    }
+
+    .btn--primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 20px rgba(8, 53, 160, 0.3);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ==========================================
+       MAIN CONTENT
+       ========================================== */
+    .form-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px;
+    }
+
+    .form-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 1024px) {
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ==========================================
+       CARDS
+       ========================================== */
+    .card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid rgba(232, 232, 232, 0.6);
+      background: white;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .card__header {
+      border-bottom: 1px solid rgba(232, 232, 232, 0.4);
+      background: linear-gradient(to right, rgba(8, 53, 160, 0.03), transparent);
+      padding: 16px 24px;
+    }
+
+    .card__header--accent {
+      background: linear-gradient(to right, rgba(255, 216, 216, 0.08), transparent);
+    }
+
+    .card__header--success {
+      background: linear-gradient(to right, rgba(22, 163, 74, 0.05), transparent);
+    }
+
+    .card__header-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card__number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(8, 53, 160, 0.1);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card__subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card__body {
+      padding: 24px;
+    }
+
+    /* ==========================================
+       FORM FIELDS
+       ========================================== */
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .form-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-field__label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .form-field__label .required {
+      color: var(--alert);
+      margin-left: 2px;
+    }
+
+    .form-field__hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .form-field__error {
+      font-size: 12px;
+      color: var(--alert);
+    }
+
+    /* ==========================================
+       SELECT
+       ========================================== */
+    .select {
+      position: relative;
+      width: 100%;
+    }
+
+    .select__trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--background);
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .select__trigger:hover {
+      border-color: var(--primary);
+    }
+
+    .select__trigger:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(8, 53, 160, 0.4);
+    }
+
+    .select__trigger--placeholder {
+      color: var(--text-muted);
+    }
+
+    .select__trigger--disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .select__icon {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ==========================================
+       TEXTAREA
+       ========================================== */
+    .textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--background);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      resize: none;
+      transition: all 0.2s;
+    }
+
+    .textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .textarea:hover {
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(8, 53, 160, 0.4);
+    }
+
+    /* ==========================================
+       FILE DROPZONE
+       ========================================== */
+    .file-dropzone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 120px;
+      padding: 40px 24px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      background: var(--background);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .file-dropzone:hover {
+      border-color: rgba(8, 53, 160, 0.5);
+      background: rgba(8, 53, 160, 0.05);
+    }
+
+    .file-dropzone__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(8, 53, 160, 0.1);
+      color: var(--primary);
+    }
+
+    .file-dropzone__icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .file-dropzone__label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .file-dropzone__hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================
+       FILE LIST
+       ========================================== */
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .file-item__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(232, 232, 232, 0.5);
+      flex-shrink: 0;
+    }
+
+    .file-item__icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+    }
+
+    .file-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-item__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-item__size {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .file-item__status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .file-item__status--ready {
+      background: rgba(22, 163, 74, 0.1);
+      color: var(--success);
+    }
+
+    .file-item__status--pending {
+      background: rgba(8, 53, 160, 0.1);
+      color: var(--primary);
+    }
+
+    .file-item__status svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .file-item__actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text);
+    }
+
+    .btn-icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ==========================================
+       INFO CARD
+       ========================================== */
+    .info-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-item__number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(8, 53, 160, 0.1);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .info-item__content {
+      flex: 1;
+    }
+
+    .info-item__title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .info-item__description {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ==========================================
+       SPACING UTILITIES
+       ========================================== */
+    .space-y-5 > * + * {
+      margin-top: 20px;
+    }
+
+    .space-y-3 > * + * {
+      margin-top: 12px;
+    }
+
+    .space-y-4 > * + * {
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <form class="form-container">
+    <!-- Header -->
+    <header class="form-header">
+      <div class="form-header__content">
+        <div class="form-header__left">
+          <div class="form-header__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" x2="12" y1="18" y2="12"/>
+              <line x1="9" x2="15" y1="15" y2="15"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="form-header__title">Nuevo Reclamo</h1>
+            <p class="form-header__subtitle">Complete la información para registrar un nuevo reclamo</p>
+          </div>
+        </div>
+
+        <div class="form-header__actions">
+          <button type="button" class="btn btn--outline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"/>
+              <path d="M6 6l12 12"/>
+            </svg>
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn--primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            Crear Reclamo
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="form-content">
+      <div class="form-grid">
+        <!-- Left Column -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- Insured Information Card -->
+          <div class="card">
+            <div class="card__header">
+              <div class="card__header-content">
+                <div class="card__number">1</div>
+                <div>
+                  <h2 class="card__title">Información del Asegurado</h2>
+                  <p class="card__subtitle">Seleccione el cliente, afiliado y paciente</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card__body">
+              <div class="space-y-5">
+                <!-- Client Select -->
+                <div class="form-field">
+                  <label class="form-field__label">
+                    Cliente
+                    <span class="required">*</span>
+                  </label>
+                  <div class="select">
+                    <div class="select__trigger select__trigger--placeholder">
+                      <span>Seleccionar cliente...</span>
+                      <svg class="select__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Affiliate Combobox -->
+                <div class="form-field">
+                  <label class="form-field__label">
+                    Afiliado
+                    <span class="required">*</span>
+                  </label>
+                  <div class="select">
+                    <div class="select__trigger select__trigger--placeholder select__trigger--disabled">
+                      <span>Primero seleccione un cliente</span>
+                      <svg class="select__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Patient Select -->
+                <div class="form-field">
+                  <label class="form-field__label">
+                    Paciente
+                    <span class="required">*</span>
+                  </label>
+                  <div class="select">
+                    <div class="select__trigger select__trigger--placeholder select__trigger--disabled">
+                      <span>Primero seleccione un afiliado</span>
+                      <svg class="select__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info Card -->
+          <div class="card" style="flex: 1;">
+            <div class="card__header card__header--success">
+              <div class="card__header-content">
+                <div class="card__number">3</div>
+                <div>
+                  <h2 class="card__title">Información Importante</h2>
+                  <p class="card__subtitle">Antes de continuar, tenga en cuenta</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card__body" style="display: flex; flex-direction: column; justify-content: center;">
+              <div class="space-y-4">
+                <div class="info-item">
+                  <div class="info-item__number">1</div>
+                  <div class="info-item__content">
+                    <p class="info-item__title">Documentos requeridos</p>
+                    <p class="info-item__description">Asegúrese de adjuntar facturas, recetas médicas y cualquier documento de respaldo.</p>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-item__number">2</div>
+                  <div class="info-item__content">
+                    <p class="info-item__title">Tiempo de procesamiento</p>
+                    <p class="info-item__description">Los reclamos son procesados en un plazo de 5 a 10 días hábiles.</p>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-item__number">3</div>
+                  <div class="info-item__content">
+                    <p class="info-item__title">Estado del reclamo</p>
+                    <p class="info-item__description">Podrá consultar el estado de su reclamo en cualquier momento desde el panel principal.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+          <div class="card">
+            <div class="card__header card__header--accent">
+              <div class="card__header-content">
+                <div class="card__number">2</div>
+                <div>
+                  <h2 class="card__title">Detalles del Reclamo</h2>
+                  <p class="card__subtitle">Describa el motivo y adjunte documentos</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card__body" style="display: flex; flex-direction: column; gap: 20px; flex: 1;">
+              <!-- Description Textarea -->
+              <div class="form-field">
+                <label class="form-field__label">
+                  Descripción
+                  <span class="required">*</span>
+                </label>
+                <textarea
+                  class="textarea"
+                  rows="5"
+                  placeholder="Describe el motivo del reclamo, incluyendo detalles relevantes como fecha de la consulta, tipo de atención recibida, y cualquier información adicional que facilite el proceso..."
+                ></textarea>
+              </div>
+
+              <!-- File Upload -->
+              <div style="display: flex; flex-direction: column; gap: 12px; flex: 1;">
+                <label class="form-field__label" style="margin-bottom: 0;">
+                  Documentos Adjuntos
+                </label>
+
+                <div class="file-dropzone">
+                  <div class="file-dropzone__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" x2="12" y1="3" y2="15"/>
+                    </svg>
+                  </div>
+                  <p class="file-dropzone__label">Arrastra archivos aquí o haz clic para seleccionar</p>
+                  <p class="file-dropzone__hint">PDF, JPG, PNG hasta 25 MB</p>
+                </div>
+
+                <!-- File List Example -->
+                <div class="file-list">
+                  <div class="file-item">
+                    <div class="file-item__icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                      </svg>
+                    </div>
+                    <div class="file-item__info">
+                      <p class="file-item__name">factura-medica-001.pdf</p>
+                      <p class="file-item__size">2.4 MB</p>
+                    </div>
+                    <div class="file-item__status file-item__status--ready">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                    </div>
+                    <div class="file-item__actions">
+                      <button type="button" class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3 6h18"/>
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</body>
+</html>
