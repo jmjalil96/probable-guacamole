@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CotizateAlgo Brand Guidelines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Brand Colors */
+      --primary: #0835a0;
+      --primary-hover: #0a3db8;
+      --primary-dark: #062a7a;
+      --accent: #ffd8d8;
+      --alert: #ed3500;
+      --alert-light: #fee2e2;
+      --background: #fffcfb;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --border: #e8e8e8;
+      --text: #1a1a1a;
+      --text-muted: #666666;
+      --text-light: #999999;
+      --sidebar-text-muted: #8a9dc4;
+
+      /* Spacing */
+      --section-gap: 160px;
+      --content-max: 1400px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Utility */
+    .container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 24px;
+      }
+    }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      background: var(--primary);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: var(--primary-hover);
+      opacity: 0.5;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: -150px;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background: var(--primary-dark);
+      opacity: 0.6;
+    }
+
+    .hero-accent {
+      position: absolute;
+      right: 15%;
+      top: 35%;
+      width: 120px;
+      height: 120px;
+      background: var(--accent);
+      opacity: 0.2;
+      border-radius: 24px;
+      transform: rotate(45deg);
+    }
+
+    .hero-dot {
+      position: absolute;
+      left: 20%;
+      bottom: 30%;
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      opacity: 0.25;
+      border-radius: 50%;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      color: white;
+      padding: 120px 0;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--sidebar-text-muted);
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(48px, 8vw, 120px);
+      font-weight: 400;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--sidebar-text-muted);
+      margin-bottom: 60px;
+    }
+
+    .hero-description {
+      max-width: 480px;
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--sidebar-text-muted);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .hero-scroll::after {
+      content: '';
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--sidebar-text-muted), transparent);
+    }
+
+    /* ============================================
+       NAVIGATION
+       ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 24px 0;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .nav.scrolled {
+      background: var(--primary);
+      padding: 16px 0;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* ============================================
+       SECTION STYLES
+       ============================================ */
+    .section {
+      padding: var(--section-gap) 0;
+    }
+
+    .section-header {
+      margin-bottom: 80px;
+    }
+
+    .section-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       LOGO SECTION
+       ============================================ */
+    .logo-section {
+      background: linear-gradient(135deg, #fafafa 0%, var(--background) 100%);
+    }
+
+    .logo-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .logo-card {
+      position: relative;
+      padding: 80px 60px;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .logo-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .logo-card.dark {
+      background: var(--primary);
+      box-shadow: 0 20px 60px rgba(8, 53, 160, 0.3);
+    }
+
+    .logo-card.light {
+      background: white;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+
+    .logo-card.accent {
+      background: var(--accent);
+      box-shadow: 0 20px 60px rgba(255, 216, 216, 0.5);
+    }
+
+    .logo-mark {
+      font-size: 42px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .logo-mark.white {
+      color: white;
+    }
+
+    .logo-mark.white span {
+      color: var(--accent);
+    }
+
+    .logo-mark.dark {
+      color: var(--primary);
+    }
+
+    .logo-mark.dark span {
+      color: var(--alert);
+    }
+
+    .logo-tagline {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    .logo-tagline.white {
+      color: white;
+    }
+
+    .logo-tagline.dark {
+      color: var(--primary-dark);
+    }
+
+    .logo-label {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      font-size: 11px;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+    }
+
+    .logo-card.dark .logo-label,
+    .logo-card.accent .logo-label {
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Collapsed logo variant */
+    .logo-collapsed {
+      font-size: 36px;
+      font-weight: 600;
+    }
+
+    /* Logo rules */
+    .logo-rules {
+      margin-top: 100px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 60px;
+    }
+
+    .logo-rule {
+      padding: 40px;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .logo-rule h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-rule p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .rule-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .rule-icon.do {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .rule-icon.dont {
+      background: var(--alert-light);
+      color: var(--alert);
+    }
+
+    /* ============================================
+       COLOR PALETTE
+       ============================================ */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .color-card {
+      border-radius: 20px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .color-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+
+    .color-card.featured {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 640px) {
+      .color-card.featured {
+        grid-column: span 1;
+      }
+    }
+
+    .color-swatch {
+      height: 160px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+    }
+
+    .color-card.featured .color-swatch {
+      height: 220px;
+    }
+
+    .color-info {
+      padding: 24px;
+    }
+
+    .color-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .color-role {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .color-values {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .color-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      padding: 6px 12px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      color: var(--text-muted);
+    }
+
+    /* Color Combinations */
+    .color-combos {
+      margin-top: 100px;
+    }
+
+    .combo-title {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 40px;
+    }
+
+    .combo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+    }
+
+    .combo-card {
+      height: 200px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 500;
+      transition: transform 0.3s ease;
+    }
+
+    .combo-card:hover {
+      transform: scale(1.02);
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    .type-showcase {
+      margin-top: 60px;
+    }
+
+    .type-specimen {
+      padding: 80px;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+
+    .type-family-name {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    .type-display {
+      font-size: clamp(48px, 8vw, 96px);
+      line-height: 1;
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+
+    .type-alphabet {
+      font-size: 24px;
+      color: var(--text-muted);
+      line-height: 2;
+      margin-bottom: 40px;
+    }
+
+    .type-weights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+    }
+
+    .type-weight {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .type-weight-sample {
+      font-size: 32px;
+    }
+
+    .type-weight-name {
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+    }
+
+    /* Font scale */
+    .font-scale {
+      margin-top: 100px;
+    }
+
+    .scale-title {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 40px;
+    }
+
+    .scale-item {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      align-items: baseline;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .scale-item {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    .scale-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .scale-sample {
+      color: var(--text);
+    }
+
+    .scale-size {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+
+    /* ============================================
+       SPACING & RADII
+       ============================================ */
+    .spacing-section {
+      background: linear-gradient(180deg, var(--background) 0%, #f8f8f8 100%);
+    }
+
+    .spacing-visual {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .spacing-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .spacing-box {
+      background: var(--primary);
+      border-radius: 8px;
+    }
+
+    .spacing-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Radius showcase */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 32px;
+      margin-top: 100px;
+    }
+
+    .radius-card {
+      background: white;
+      border: 2px solid var(--primary);
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .radius-card:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .radius-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+    }
+
+    .radius-name {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .radius-card:hover .radius-name {
+      color: var(--sidebar-text-muted);
+    }
+
+    /* ============================================
+       COMPONENTS PREVIEW
+       ============================================ */
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .component-card {
+      background: white;
+      border-radius: 20px;
+      padding: 48px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .component-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(8, 53, 160, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-alert {
+      background: var(--alert);
+      color: white;
+    }
+
+    .btn-alert:hover {
+      background: #d42f00;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #15803d;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-primary {
+      background: rgba(8, 53, 160, 0.1);
+      color: var(--primary);
+    }
+
+    .badge-success {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .badge-alert {
+      background: var(--alert-light);
+      color: var(--alert);
+    }
+
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Input */
+    .input-preview {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .input-preview:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(8, 53, 160, 0.1);
+    }
+
+    .input-preview::placeholder {
+      color: var(--text-light);
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .avatar-primary {
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .avatar-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    .footer {
+      background: var(--primary);
+      padding: 100px 0 60px;
+      color: white;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 60px;
+    }
+
+    .footer-brand {
+      max-width: 400px;
+    }
+
+    .footer-logo {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-logo span {
+      color: var(--accent);
+    }
+
+    .footer-tagline {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--sidebar-text-muted);
+      margin-bottom: 24px;
+    }
+
+    .footer-description {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.8;
+    }
+
+    .footer-meta {
+      font-size: 12px;
+      color: var(--sidebar-text-muted);
+    }
+
+    .footer-version {
+      font-family: 'DM Mono', monospace;
+      padding: 4px 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    /* ============================================
+       ANIMATIONS
+       ============================================ */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* Smooth reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">Cotizate<span>Algo</span></a>
+      <ul class="nav-links">
+        <li><a href="#logo">Logo</a></li>
+        <li><a href="#colors">Colors</a></li>
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#spacing">Spacing</a></li>
+        <li><a href="#components">Components</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-accent"></div>
+    <div class="hero-dot"></div>
+    <div class="container hero-content">
+      <p class="hero-eyebrow animate-in">Brand Guidelines</p>
+      <h1 class="hero-title animate-in delay-1">Cotizate<span>Algo</span></h1>
+      <p class="hero-subtitle animate-in delay-2">Claims Manager</p>
+      <p class="hero-description animate-in delay-3">
+        A comprehensive guide to the visual identity, typography, colors, and design system that powers our claims management platform.
+      </p>
+    </div>
+    <div class="hero-scroll">
+      Scroll
+    </div>
+  </section>
+
+  <!-- Logo Section -->
+  <section class="section logo-section" id="logo">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-number">01</p>
+        <h2 class="section-title">Logo & Identity</h2>
+        <p class="section-subtitle">
+          The CotizateAlgo wordmark combines professional authority with approachable warmth through the accent color highlight.
+        </p>
+      </div>
+
+      <div class="logo-showcase">
+        <div class="logo-card dark reveal">
+          <div class="logo-mark white">Cotizate<span>Algo</span></div>
+          <div class="logo-tagline white">CLAIMS MANAGER</div>
+          <span class="logo-label">Primary / Dark Background</span>
+        </div>
+        <div class="logo-card light reveal">
+          <div class="logo-mark dark">Cotizate<span>Algo</span></div>
+          <div class="logo-tagline dark">CLAIMS MANAGER</div>
+          <span class="logo-label">Light Background</span>
+        </div>
+        <div class="logo-card accent reveal">
+          <div class="logo-mark dark">Cotizate<span>Algo</span></div>
+          <div class="logo-tagline dark">CLAIMS MANAGER</div>
+          <span class="logo-label">Accent Background</span>
+        </div>
+        <div class="logo-card dark reveal">
+          <div class="logo-collapsed white">C<span>A</span></div>
+          <span class="logo-label">Collapsed / Favicon</span>
+        </div>
+      </div>
+
+      <div class="logo-rules reveal">
+        <div class="logo-rule">
+          <h4><span class="rule-icon do">&#10003;</span> Clear Space</h4>
+          <p>Always maintain minimum clear space around the logo equal to the height of the "C" character.</p>
+        </div>
+        <div class="logo-rule">
+          <h4><span class="rule-icon do">&#10003;</span> Color Usage</h4>
+          <p>The "Algo" portion should always use the accent color (#ffd8d8) on dark backgrounds or alert color (#ed3500) on light backgrounds.</p>
+        </div>
+        <div class="logo-rule">
+          <h4><span class="rule-icon dont">&#10007;</span> No Modifications</h4>
+          <p>Do not stretch, rotate, apply effects, or change the colors beyond the approved variants.</p>
+        </div>
+        <div class="logo-rule">
+          <h4><span class="rule-icon dont">&#10007;</span> Minimum Size</h4>
+          <p>The wordmark should never appear smaller than 100px wide to maintain legibility.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Colors Section -->
+  <section class="section" id="colors">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-number">02</p>
+        <h2 class="section-title">Color Palette</h2>
+        <p class="section-subtitle">
+          A carefully crafted palette that balances professionalism with warmth. Deep blue conveys trust and authority, while coral accents add approachability.
+        </p>
+      </div>
+
+      <div class="color-grid">
+        <div class="color-card featured reveal">
+          <div class="color-swatch" style="background: var(--primary);">
+          </div>
+          <div class="color-info">
+            <h3 class="color-name">Primary Blue</h3>
+            <p class="color-role">Brand identity, navigation, buttons, links</p>
+            <div class="color-values">
+              <span class="color-value">#0835a0</span>
+              <span class="color-value">RGB 8, 53, 160</span>
+              <span class="color-value">HSL 222, 90%, 33%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--primary-hover);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Primary Hover</h3>
+            <p class="color-role">Interactive hover states</p>
+            <div class="color-values">
+              <span class="color-value">#0a3db8</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--primary-dark);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Primary Dark</h3>
+            <p class="color-role">Deep accents, shadows</p>
+            <div class="color-values">
+              <span class="color-value">#062a7a</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card featured reveal">
+          <div class="color-swatch" style="background: var(--accent);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Accent Coral</h3>
+            <p class="color-role">Highlights, logo accent, decorative elements</p>
+            <div class="color-values">
+              <span class="color-value">#ffd8d8</span>
+              <span class="color-value">RGB 255, 216, 216</span>
+              <span class="color-value">HSL 0, 100%, 92%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--alert);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Alert Red</h3>
+            <p class="color-role">Errors, urgent actions, warnings</p>
+            <div class="color-values">
+              <span class="color-value">#ed3500</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--success);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Success Green</h3>
+            <p class="color-role">Confirmations, positive states</p>
+            <div class="color-values">
+              <span class="color-value">#16a34a</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--warning);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Warning Amber</h3>
+            <p class="color-role">Caution states, pending items</p>
+            <div class="color-values">
+              <span class="color-value">#d97706</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--background); border: 1px solid var(--border);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Background</h3>
+            <p class="color-role">Page background, warm white</p>
+            <div class="color-values">
+              <span class="color-value">#fffcfb</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--text);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Text</h3>
+            <p class="color-role">Primary body text</p>
+            <div class="color-values">
+              <span class="color-value">#1a1a1a</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--text-muted);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Text Muted</h3>
+            <p class="color-role">Secondary text, captions</p>
+            <div class="color-values">
+              <span class="color-value">#666666</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--border);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Border</h3>
+            <p class="color-role">Dividers, input borders, cards</p>
+            <div class="color-values">
+              <span class="color-value">#e8e8e8</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="color-card reveal">
+          <div class="color-swatch" style="background: var(--sidebar-text-muted);"></div>
+          <div class="color-info">
+            <h3 class="color-name">Sidebar Muted</h3>
+            <p class="color-role">Secondary nav text</p>
+            <div class="color-values">
+              <span class="color-value">#8a9dc4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="color-combos reveal">
+        <h3 class="combo-title">Recommended Combinations</h3>
+        <div class="combo-grid">
+          <div class="combo-card" style="background: var(--primary); color: white;">
+            Primary + White
+          </div>
+          <div class="combo-card" style="background: var(--primary); color: var(--accent);">
+            Primary + Accent
+          </div>
+          <div class="combo-card" style="background: var(--background); color: var(--primary); border: 1px solid var(--border);">
+            Background + Primary
+          </div>
+          <div class="combo-card" style="background: var(--accent); color: var(--primary-dark);">
+            Accent + Primary Dark
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Typography Section -->
+  <section class="section" id="typography">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-number">03</p>
+        <h2 class="section-title">Typography</h2>
+        <p class="section-subtitle">
+          DM Sans provides clarity and professionalism across all interfaces, with excellent legibility at every size.
+        </p>
+      </div>
+
+      <div class="type-showcase">
+        <div class="type-specimen reveal">
+          <p class="type-family-name">DM Sans — Primary Typeface</p>
+          <p class="type-display">Aa Bb Cc</p>
+          <p class="type-alphabet">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+            abcdefghijklmnopqrstuvwxyz<br>
+            0123456789 !@#$%^&*()
+          </p>
+          <div class="type-weights">
+            <div class="type-weight">
+              <span class="type-weight-sample" style="font-weight: 300;">Light</span>
+              <span class="type-weight-name">300</span>
+            </div>
+            <div class="type-weight">
+              <span class="type-weight-sample" style="font-weight: 400;">Regular</span>
+              <span class="type-weight-name">400</span>
+            </div>
+            <div class="type-weight">
+              <span class="type-weight-sample" style="font-weight: 500;">Medium</span>
+              <span class="type-weight-name">500</span>
+            </div>
+            <div class="type-weight">
+              <span class="type-weight-sample" style="font-weight: 600;">Semibold</span>
+              <span class="type-weight-name">600</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="type-specimen reveal" style="font-family: 'DM Mono', monospace;">
+          <p class="type-family-name">DM Mono — Code & Data</p>
+          <p class="type-display" style="font-size: clamp(36px, 6vw, 72px);">01234567</p>
+          <p class="type-alphabet">
+            Used for code snippets, data values,<br>
+            reference numbers, and technical content.
+          </p>
+        </div>
+      </div>
+
+      <div class="font-scale reveal">
+        <h3 class="scale-title">Type Scale</h3>
+
+        <div class="scale-item">
+          <span class="scale-label">Display</span>
+          <span class="scale-sample" style="font-size: 48px; font-weight: 600; line-height: 1.1;">Claims Overview</span>
+          <span class="scale-size">48px / 600</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">H1</span>
+          <span class="scale-sample" style="font-size: 36px; font-weight: 600; line-height: 1.2;">Page Title</span>
+          <span class="scale-size">36px / 600</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">H2</span>
+          <span class="scale-sample" style="font-size: 28px; font-weight: 600; line-height: 1.3;">Section Header</span>
+          <span class="scale-size">28px / 600</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">H3</span>
+          <span class="scale-sample" style="font-size: 20px; font-weight: 500; line-height: 1.4;">Card Title</span>
+          <span class="scale-size">20px / 500</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">Body</span>
+          <span class="scale-sample" style="font-size: 16px; font-weight: 400; line-height: 1.6;">The quick brown fox jumps over the lazy dog.</span>
+          <span class="scale-size">16px / 400</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">Small</span>
+          <span class="scale-sample" style="font-size: 14px; font-weight: 400; line-height: 1.5; color: var(--text-muted);">Secondary text and captions</span>
+          <span class="scale-size">14px / 400</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">Caption</span>
+          <span class="scale-sample" style="font-size: 12px; font-weight: 400; line-height: 1.5; color: var(--text-light);">Labels, timestamps, metadata</span>
+          <span class="scale-size">12px / 400</span>
+        </div>
+
+        <div class="scale-item">
+          <span class="scale-label">Overline</span>
+          <span class="scale-sample" style="font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-light);">CATEGORY LABEL</span>
+          <span class="scale-size">10px / 500 / 0.2em</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spacing Section -->
+  <section class="section spacing-section" id="spacing">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-number">04</p>
+        <h2 class="section-title">Spacing & Radii</h2>
+        <p class="section-subtitle">
+          Consistent spacing creates rhythm and hierarchy. Our radius system adds softness while maintaining professionalism.
+        </p>
+      </div>
+
+      <div class="spacing-visual reveal">
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 8px; height: 8px;"></div>
+          <span class="spacing-label">4px<br>xs</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 16px; height: 16px;"></div>
+          <span class="spacing-label">8px<br>sm</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 24px; height: 24px;"></div>
+          <span class="spacing-label">12px<br>md</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 32px; height: 32px;"></div>
+          <span class="spacing-label">16px<br>base</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 48px; height: 48px;"></div>
+          <span class="spacing-label">24px<br>lg</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 64px; height: 64px;"></div>
+          <span class="spacing-label">32px<br>xl</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 96px; height: 96px;"></div>
+          <span class="spacing-label">48px<br>2xl</span>
+        </div>
+        <div class="spacing-item">
+          <div class="spacing-box" style="width: 128px; height: 128px;"></div>
+          <span class="spacing-label">64px<br>3xl</span>
+        </div>
+      </div>
+
+      <div class="radius-grid reveal">
+        <div class="radius-card" style="border-radius: 6px;">
+          <span class="radius-value">6px</span>
+          <span class="radius-name">Small — Buttons, inputs</span>
+        </div>
+        <div class="radius-card" style="border-radius: 8px;">
+          <span class="radius-value">8px</span>
+          <span class="radius-name">Medium — Cards, badges</span>
+        </div>
+        <div class="radius-card" style="border-radius: 10px;">
+          <span class="radius-value">10px</span>
+          <span class="radius-name">Large — Modals, panels</span>
+        </div>
+        <div class="radius-card" style="border-radius: 12px;">
+          <span class="radius-value">12px</span>
+          <span class="radius-name">XL — Containers, sections</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Components Section -->
+  <section class="section" id="components">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-number">05</p>
+        <h2 class="section-title">UI Components</h2>
+        <p class="section-subtitle">
+          Core building blocks that maintain consistency across the application while providing clear visual hierarchy.
+        </p>
+      </div>
+
+      <div class="components-grid">
+        <div class="component-card reveal">
+          <span class="component-label">Buttons</span>
+          <div class="btn-group">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-success">Success</button>
+            <button class="btn btn-alert">Alert</button>
+          </div>
+        </div>
+
+        <div class="component-card reveal">
+          <span class="component-label">Status Badges</span>
+          <div class="badge-group">
+            <span class="badge badge-primary">New</span>
+            <span class="badge badge-success">Approved</span>
+            <span class="badge badge-warning">Pending</span>
+            <span class="badge badge-alert">Urgent</span>
+          </div>
+        </div>
+
+        <div class="component-card reveal">
+          <span class="component-label">Text Input</span>
+          <input type="text" class="input-preview" placeholder="Enter claim reference...">
+        </div>
+
+        <div class="component-card reveal">
+          <span class="component-label">Avatars</span>
+          <div class="avatar-group">
+            <div class="avatar avatar-primary">JD</div>
+            <div class="avatar" style="background: var(--primary); color: white;">CA</div>
+            <div class="avatar" style="background: var(--success-light); color: var(--success);">MK</div>
+            <div class="avatar" style="background: var(--warning-light); color: var(--warning);">RS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">Cotizate<span>Algo</span></div>
+        <p class="footer-tagline">CLAIMS MANAGER</p>
+        <p class="footer-description">
+          These brand guidelines ensure consistent visual identity across all touchpoints. For questions or asset requests, contact the design team.
+        </p>
+      </div>
+      <div class="footer-meta">
+        <span class="footer-version">v1.0.0</span>
+        <p>Brand Guidelines</p>
+        <p>Last updated: January 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navigation scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

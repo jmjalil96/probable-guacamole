@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-primary: #0835a0;
+  --color-primary-hover: #0a3db8;
+  --color-primary-dark: #062a7a;
+  --color-accent: #ffd8d8;
+  --color-alert: #ed3500;
+  --color-alert-light: #fee2e2;
+  --color-background: #fffcfb;
+  --color-success: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-light: #fef3c7;
+  --color-border: #e8e8e8;
+  --color-text: #1a1a1a;
+  --color-text-muted: #666666;
+  --color-text-light: #999999;
+  --color-sidebar-muted: #8a9dc4;
+
+  /* Font Families */
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --font-display: "Playfair Display", serif;
+}
