@@ -8,7 +8,7 @@ CREATE TYPE "MaritalStatus" AS ENUM ('SINGLE', 'MARRIED', 'DIVORCED', 'WIDOWED',
 CREATE TYPE "DependentRelationship" AS ENUM ('SPOUSE', 'CHILD', 'PARENT', 'SIBLING', 'OTHER');
 
 -- CreateEnum
-CREATE TYPE "AuditAction" AS ENUM ('LOGIN', 'LOGOUT', 'LOGIN_FAILED', 'PASSWORD_CHANGED', 'PASSWORD_RESET_REQUESTED', 'CREATE', 'UPDATE', 'DELETE', 'INVITATION_SENT', 'INVITATION_ACCEPTED', 'ROLE_ASSIGNED', 'STATUS_CHANGE');
+CREATE TYPE "AuditSeverity" AS ENUM ('INFO', 'WARNING', 'CRITICAL');
 
 -- CreateEnum
 CREATE TYPE "TokenType" AS ENUM ('EMAIL_VERIFICATION', 'PASSWORD_RESET', 'MAGIC_LINK');
@@ -20,13 +20,7 @@ CREATE TYPE "ClaimStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'IN_REVIEW', 'PENDING_I
 CREATE TYPE "CareType" AS ENUM ('AMBULATORY', 'HOSPITALARY', 'OTHER');
 
 -- CreateEnum
-CREATE TYPE "ClaimFileStatus" AS ENUM ('PENDING', 'READY', 'FAILED');
-
--- CreateEnum
-CREATE TYPE "ClaimFileType" AS ENUM ('INVOICE', 'RECEIPT', 'MEDICAL_REPORT', 'PRESCRIPTION', 'ID_DOCUMENT', 'OTHER');
-
--- CreateEnum
-CREATE TYPE "DocumentFileStatus" AS ENUM ('PENDING', 'READY', 'FAILED');
+CREATE TYPE "FileStatus" AS ENUM ('PENDING', 'READY', 'FAILED');
 
 -- CreateEnum
 CREATE TYPE "InvoiceStatus" AS ENUM ('PENDING', 'VALIDATED', 'DISCREPANCY', 'CANCELLED');
@@ -64,9 +58,6 @@ CREATE TYPE "TicketStatus" AS ENUM ('OPEN', 'IN_PROGRESS', 'WAITING_ON_CLIENT', 
 -- CreateEnum
 CREATE TYPE "TicketPriority" AS ENUM ('LOW', 'NORMAL', 'HIGH', 'URGENT');
 
--- CreateEnum
-CREATE TYPE "TicketFileStatus" AS ENUM ('PENDING', 'READY', 'FAILED');
-
 -- CreateTable
 CREATE TABLE "affiliates" (
     "id" TEXT NOT NULL,
@@ -91,27 +82,16 @@ CREATE TABLE "affiliates" (
 );
 
 -- CreateTable
-CREATE TABLE "affiliate_files" (
-    "id" TEXT NOT NULL,
-    "affiliateId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "affiliate_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "audit_logs" (
     "id" TEXT NOT NULL,
     "userId" TEXT,
-    "action" "AuditAction" NOT NULL,
+    "sessionId" TEXT,
+    "action" TEXT NOT NULL,
     "resource" TEXT NOT NULL,
+    "severity" "AuditSeverity" NOT NULL DEFAULT 'INFO',
     "resourceId" TEXT,
+    "oldValue" JSONB,
+    "newValue" JSONB,
     "metadata" JSONB,
     "ipAddress" TEXT,
     "userAgent" TEXT,
@@ -130,6 +110,8 @@ CREATE TABLE "users" (
     "roleId" TEXT NOT NULL,
     "sessionsInvalidBefore" TIMESTAMP(3),
     "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "failedLoginAttempts" INTEGER NOT NULL DEFAULT 0,
+    "lockedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -224,40 +206,12 @@ CREATE TABLE "claim_invoices" (
 );
 
 -- CreateTable
-CREATE TABLE "pending_claim_files" (
+CREATE TABLE "global_counters" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "sessionKey" TEXT NOT NULL,
-    "fileType" "ClaimFileType" NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "pending_claim_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "claim_files" (
-    "id" TEXT NOT NULL,
-    "claimId" TEXT NOT NULL,
-    "fileType" "ClaimFileType" NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "sourceKey" TEXT NOT NULL,
-    "targetKey" TEXT,
-    "status" "ClaimFileStatus" NOT NULL DEFAULT 'PENDING',
-    "errorMessage" TEXT,
-    "migratedAt" TIMESTAMP(3),
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "value" INTEGER NOT NULL DEFAULT 0,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "claim_files_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "global_counters_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -269,45 +223,6 @@ CREATE TABLE "clients" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "clients_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "client_files" (
-    "id" TEXT NOT NULL,
-    "clientId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "client_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "global_counters" (
-    "id" TEXT NOT NULL,
-    "value" INTEGER NOT NULL DEFAULT 0,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "global_counters_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "pending_document_files" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "sessionKey" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "pending_document_files_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -328,26 +243,6 @@ CREATE TABLE "documents" (
 );
 
 -- CreateTable
-CREATE TABLE "document_files" (
-    "id" TEXT NOT NULL,
-    "documentId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "sourceKey" TEXT NOT NULL,
-    "targetKey" TEXT,
-    "status" "DocumentFileStatus" NOT NULL DEFAULT 'PENDING',
-    "errorMessage" TEXT,
-    "migratedAt" TIMESTAMP(3),
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "document_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "document_access" (
     "documentId" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
@@ -355,6 +250,44 @@ CREATE TABLE "document_access" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "document_access_pkey" PRIMARY KEY ("documentId","clientId")
+);
+
+-- CreateTable
+CREATE TABLE "pending_uploads" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "sessionKey" TEXT NOT NULL,
+    "fileKey" TEXT NOT NULL,
+    "fileName" TEXT NOT NULL,
+    "fileSize" INTEGER NOT NULL,
+    "contentType" TEXT NOT NULL,
+    "entityType" TEXT,
+    "category" TEXT,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "pending_uploads_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "files" (
+    "id" TEXT NOT NULL,
+    "entityType" TEXT NOT NULL,
+    "entityId" TEXT NOT NULL,
+    "fileKey" TEXT NOT NULL,
+    "fileName" TEXT NOT NULL,
+    "fileSize" INTEGER NOT NULL,
+    "contentType" TEXT NOT NULL,
+    "category" TEXT,
+    "path" TEXT,
+    "status" "FileStatus" NOT NULL DEFAULT 'READY',
+    "errorMessage" TEXT,
+    "processedAt" TIMESTAMP(3),
+    "deletedAt" TIMESTAMP(3),
+    "createdById" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "files_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -454,21 +387,6 @@ CREATE TABLE "invoice_discrepancy_causes" (
 );
 
 -- CreateTable
-CREATE TABLE "invoice_files" (
-    "id" TEXT NOT NULL,
-    "invoiceId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "invoice_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "insurers" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -504,7 +422,7 @@ CREATE TABLE "policies" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "cancellationReason" TEXT,
-    "cancelledAt" TIMESTAMP(3),
+    "cancelledAt" DATE,
 
     CONSTRAINT "policies_pkey" PRIMARY KEY ("id")
 );
@@ -549,51 +467,6 @@ CREATE TABLE "policy_history" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "policy_history_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "insurer_files" (
-    "id" TEXT NOT NULL,
-    "insurerId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "insurer_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "policy_files" (
-    "id" TEXT NOT NULL,
-    "policyId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "policy_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "enrollment_files" (
-    "id" TEXT NOT NULL,
-    "enrollmentId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "enrollment_files_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -696,21 +569,6 @@ CREATE TABLE "role_permissions" (
 );
 
 -- CreateTable
-CREATE TABLE "pending_ticket_files" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "sessionKey" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileKey" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "pending_ticket_files_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "tickets" (
     "id" TEXT NOT NULL,
     "ticketNumber" INTEGER NOT NULL,
@@ -742,26 +600,6 @@ CREATE TABLE "ticket_messages" (
     CONSTRAINT "ticket_messages_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "ticket_files" (
-    "id" TEXT NOT NULL,
-    "messageId" TEXT NOT NULL,
-    "fileName" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "contentType" TEXT NOT NULL,
-    "sourceKey" TEXT NOT NULL,
-    "targetKey" TEXT,
-    "status" "TicketFileStatus" NOT NULL DEFAULT 'PENDING',
-    "errorMessage" TEXT,
-    "migratedAt" TIMESTAMP(3),
-    "deletedAt" TIMESTAMP(3),
-    "createdById" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "ticket_files_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "affiliates_userId_key" ON "affiliates"("userId");
 
@@ -784,19 +622,10 @@ CREATE INDEX "affiliates_lastName_firstName_idx" ON "affiliates"("lastName", "fi
 CREATE INDEX "affiliates_isActive_idx" ON "affiliates"("isActive");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "affiliate_files_fileKey_key" ON "affiliate_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "affiliate_files_affiliateId_idx" ON "affiliate_files"("affiliateId");
-
--- CreateIndex
-CREATE INDEX "affiliate_files_createdById_idx" ON "affiliate_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "affiliate_files_deletedAt_idx" ON "affiliate_files"("deletedAt");
-
--- CreateIndex
 CREATE INDEX "audit_logs_userId_idx" ON "audit_logs"("userId");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_sessionId_idx" ON "audit_logs"("sessionId");
 
 -- CreateIndex
 CREATE INDEX "audit_logs_resource_resourceId_idx" ON "audit_logs"("resource", "resourceId");
@@ -805,7 +634,16 @@ CREATE INDEX "audit_logs_resource_resourceId_idx" ON "audit_logs"("resource", "r
 CREATE INDEX "audit_logs_action_idx" ON "audit_logs"("action");
 
 -- CreateIndex
+CREATE INDEX "audit_logs_severity_idx" ON "audit_logs"("severity");
+
+-- CreateIndex
 CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_resource_resourceId_createdAt_idx" ON "audit_logs"("resource", "resourceId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_userId_createdAt_idx" ON "audit_logs"("userId", "createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
@@ -886,48 +724,6 @@ CREATE INDEX "claim_invoices_claimId_idx" ON "claim_invoices"("claimId");
 CREATE INDEX "claim_invoices_createdById_idx" ON "claim_invoices"("createdById");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "pending_claim_files_fileKey_key" ON "pending_claim_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "pending_claim_files_userId_sessionKey_idx" ON "pending_claim_files"("userId", "sessionKey");
-
--- CreateIndex
-CREATE INDEX "pending_claim_files_expiresAt_idx" ON "pending_claim_files"("expiresAt");
-
--- CreateIndex
-CREATE INDEX "claim_files_claimId_idx" ON "claim_files"("claimId");
-
--- CreateIndex
-CREATE INDEX "claim_files_status_idx" ON "claim_files"("status");
-
--- CreateIndex
-CREATE INDEX "claim_files_createdById_idx" ON "claim_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "claim_files_deletedAt_idx" ON "claim_files"("deletedAt");
-
--- CreateIndex
-CREATE UNIQUE INDEX "client_files_fileKey_key" ON "client_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "client_files_clientId_idx" ON "client_files"("clientId");
-
--- CreateIndex
-CREATE INDEX "client_files_createdById_idx" ON "client_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "client_files_deletedAt_idx" ON "client_files"("deletedAt");
-
--- CreateIndex
-CREATE UNIQUE INDEX "pending_document_files_fileKey_key" ON "pending_document_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "pending_document_files_userId_sessionKey_idx" ON "pending_document_files"("userId", "sessionKey");
-
--- CreateIndex
-CREATE INDEX "pending_document_files_expiresAt_idx" ON "pending_document_files"("expiresAt");
-
--- CreateIndex
 CREATE UNIQUE INDEX "documents_documentNumber_key" ON "documents"("documentNumber");
 
 -- CreateIndex
@@ -946,18 +742,6 @@ CREATE INDEX "documents_createdById_idx" ON "documents"("createdById");
 CREATE INDEX "documents_createdAt_idx" ON "documents"("createdAt");
 
 -- CreateIndex
-CREATE INDEX "document_files_documentId_idx" ON "document_files"("documentId");
-
--- CreateIndex
-CREATE INDEX "document_files_status_idx" ON "document_files"("status");
-
--- CreateIndex
-CREATE INDEX "document_files_createdById_idx" ON "document_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "document_files_deletedAt_idx" ON "document_files"("deletedAt");
-
--- CreateIndex
 CREATE INDEX "document_access_documentId_idx" ON "document_access"("documentId");
 
 -- CreateIndex
@@ -965,6 +749,42 @@ CREATE INDEX "document_access_clientId_idx" ON "document_access"("clientId");
 
 -- CreateIndex
 CREATE INDEX "document_access_grantedById_idx" ON "document_access"("grantedById");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pending_uploads_fileKey_key" ON "pending_uploads"("fileKey");
+
+-- CreateIndex
+CREATE INDEX "pending_uploads_userId_sessionKey_idx" ON "pending_uploads"("userId", "sessionKey");
+
+-- CreateIndex
+CREATE INDEX "pending_uploads_expiresAt_idx" ON "pending_uploads"("expiresAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "files_fileKey_key" ON "files"("fileKey");
+
+-- CreateIndex
+CREATE INDEX "files_entityType_entityId_idx" ON "files"("entityType", "entityId");
+
+-- CreateIndex
+CREATE INDEX "files_entityType_entityId_category_idx" ON "files"("entityType", "entityId", "category");
+
+-- CreateIndex
+CREATE INDEX "files_entityType_entityId_path_idx" ON "files"("entityType", "entityId", "path");
+
+-- CreateIndex
+CREATE INDEX "files_fileName_idx" ON "files"("fileName");
+
+-- CreateIndex
+CREATE INDEX "files_status_idx" ON "files"("status");
+
+-- CreateIndex
+CREATE INDEX "files_deletedAt_idx" ON "files"("deletedAt");
+
+-- CreateIndex
+CREATE INDEX "files_createdById_idx" ON "files"("createdById");
+
+-- CreateIndex
+CREATE INDEX "files_createdAt_idx" ON "files"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "invitations_tokenHash_key" ON "invitations"("tokenHash");
@@ -1063,18 +883,6 @@ CREATE INDEX "invoice_discrepancy_causes_createdById_idx" ON "invoice_discrepanc
 CREATE INDEX "invoice_discrepancy_causes_deletedAt_idx" ON "invoice_discrepancy_causes"("deletedAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "invoice_files_fileKey_key" ON "invoice_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "invoice_files_invoiceId_idx" ON "invoice_files"("invoiceId");
-
--- CreateIndex
-CREATE INDEX "invoice_files_createdById_idx" ON "invoice_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "invoice_files_deletedAt_idx" ON "invoice_files"("deletedAt");
-
--- CreateIndex
 CREATE UNIQUE INDEX "insurers_name_key" ON "insurers"("name");
 
 -- CreateIndex
@@ -1138,42 +946,6 @@ CREATE INDEX "policy_history_createdById_idx" ON "policy_history"("createdById")
 CREATE INDEX "policy_history_createdAt_idx" ON "policy_history"("createdAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "insurer_files_fileKey_key" ON "insurer_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "insurer_files_insurerId_idx" ON "insurer_files"("insurerId");
-
--- CreateIndex
-CREATE INDEX "insurer_files_createdById_idx" ON "insurer_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "insurer_files_deletedAt_idx" ON "insurer_files"("deletedAt");
-
--- CreateIndex
-CREATE UNIQUE INDEX "policy_files_fileKey_key" ON "policy_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "policy_files_policyId_idx" ON "policy_files"("policyId");
-
--- CreateIndex
-CREATE INDEX "policy_files_createdById_idx" ON "policy_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "policy_files_deletedAt_idx" ON "policy_files"("deletedAt");
-
--- CreateIndex
-CREATE UNIQUE INDEX "enrollment_files_fileKey_key" ON "enrollment_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "enrollment_files_enrollmentId_idx" ON "enrollment_files"("enrollmentId");
-
--- CreateIndex
-CREATE INDEX "enrollment_files_createdById_idx" ON "enrollment_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "enrollment_files_deletedAt_idx" ON "enrollment_files"("deletedAt");
-
--- CreateIndex
 CREATE UNIQUE INDEX "employees_email_key" ON "employees"("email");
 
 -- CreateIndex
@@ -1228,15 +1000,6 @@ CREATE UNIQUE INDEX "permissions_resource_action_key" ON "permissions"("resource
 CREATE INDEX "role_permissions_permissionId_idx" ON "role_permissions"("permissionId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "pending_ticket_files_fileKey_key" ON "pending_ticket_files"("fileKey");
-
--- CreateIndex
-CREATE INDEX "pending_ticket_files_userId_sessionKey_idx" ON "pending_ticket_files"("userId", "sessionKey");
-
--- CreateIndex
-CREATE INDEX "pending_ticket_files_expiresAt_idx" ON "pending_ticket_files"("expiresAt");
-
--- CreateIndex
 CREATE UNIQUE INDEX "tickets_ticketNumber_key" ON "tickets"("ticketNumber");
 
 -- CreateIndex
@@ -1275,18 +1038,6 @@ CREATE INDEX "ticket_messages_authorId_idx" ON "ticket_messages"("authorId");
 -- CreateIndex
 CREATE INDEX "ticket_messages_createdAt_idx" ON "ticket_messages"("createdAt");
 
--- CreateIndex
-CREATE INDEX "ticket_files_messageId_idx" ON "ticket_files"("messageId");
-
--- CreateIndex
-CREATE INDEX "ticket_files_status_idx" ON "ticket_files"("status");
-
--- CreateIndex
-CREATE INDEX "ticket_files_createdById_idx" ON "ticket_files"("createdById");
-
--- CreateIndex
-CREATE INDEX "ticket_files_deletedAt_idx" ON "ticket_files"("deletedAt");
-
 -- AddForeignKey
 ALTER TABLE "affiliates" ADD CONSTRAINT "affiliates_primaryAffiliateId_fkey" FOREIGN KEY ("primaryAffiliateId") REFERENCES "affiliates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -1297,13 +1048,10 @@ ALTER TABLE "affiliates" ADD CONSTRAINT "affiliates_clientId_fkey" FOREIGN KEY (
 ALTER TABLE "affiliates" ADD CONSTRAINT "affiliates_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "affiliate_files" ADD CONSTRAINT "affiliate_files_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "affiliates"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "affiliate_files" ADD CONSTRAINT "affiliate_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "sessions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1345,31 +1093,7 @@ ALTER TABLE "claim_invoices" ADD CONSTRAINT "claim_invoices_claimId_fkey" FOREIG
 ALTER TABLE "claim_invoices" ADD CONSTRAINT "claim_invoices_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pending_claim_files" ADD CONSTRAINT "pending_claim_files_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "claim_files" ADD CONSTRAINT "claim_files_claimId_fkey" FOREIGN KEY ("claimId") REFERENCES "claims"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "claim_files" ADD CONSTRAINT "claim_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "client_files" ADD CONSTRAINT "client_files_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "client_files" ADD CONSTRAINT "client_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "pending_document_files" ADD CONSTRAINT "pending_document_files_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "documents" ADD CONSTRAINT "documents_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "document_files" ADD CONSTRAINT "document_files_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "documents"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "document_files" ADD CONSTRAINT "document_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "document_access" ADD CONSTRAINT "document_access_documentId_fkey" FOREIGN KEY ("documentId") REFERENCES "documents"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1379,6 +1103,12 @@ ALTER TABLE "document_access" ADD CONSTRAINT "document_access_clientId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "document_access" ADD CONSTRAINT "document_access_grantedById_fkey" FOREIGN KEY ("grantedById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pending_uploads" ADD CONSTRAINT "pending_uploads_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "files" ADD CONSTRAINT "files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "invitations" ADD CONSTRAINT "invitations_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1444,12 +1174,6 @@ ALTER TABLE "invoice_discrepancy_causes" ADD CONSTRAINT "invoice_discrepancy_cau
 ALTER TABLE "invoice_discrepancy_causes" ADD CONSTRAINT "invoice_discrepancy_causes_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "invoice_files" ADD CONSTRAINT "invoice_files_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "invoices"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "invoice_files" ADD CONSTRAINT "invoice_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "policies" ADD CONSTRAINT "policies_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1472,24 +1196,6 @@ ALTER TABLE "policy_history" ADD CONSTRAINT "policy_history_policyId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "policy_history" ADD CONSTRAINT "policy_history_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "insurer_files" ADD CONSTRAINT "insurer_files_insurerId_fkey" FOREIGN KEY ("insurerId") REFERENCES "insurers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "insurer_files" ADD CONSTRAINT "insurer_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "policy_files" ADD CONSTRAINT "policy_files_policyId_fkey" FOREIGN KEY ("policyId") REFERENCES "policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "policy_files" ADD CONSTRAINT "policy_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "enrollment_files" ADD CONSTRAINT "enrollment_files_enrollmentId_fkey" FOREIGN KEY ("enrollmentId") REFERENCES "policy_enrollments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "enrollment_files" ADD CONSTRAINT "enrollment_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "employees" ADD CONSTRAINT "employees_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -1519,9 +1225,6 @@ ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_roleId_fkey" FOR
 ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_permissionId_fkey" FOREIGN KEY ("permissionId") REFERENCES "permissions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "pending_ticket_files" ADD CONSTRAINT "pending_ticket_files_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "tickets" ADD CONSTRAINT "tickets_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "clients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1541,9 +1244,3 @@ ALTER TABLE "ticket_messages" ADD CONSTRAINT "ticket_messages_ticketId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "ticket_messages" ADD CONSTRAINT "ticket_messages_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ticket_files" ADD CONSTRAINT "ticket_files_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "ticket_messages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ticket_files" ADD CONSTRAINT "ticket_files_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

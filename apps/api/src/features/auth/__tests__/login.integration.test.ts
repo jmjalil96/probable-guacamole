@@ -11,6 +11,15 @@ import {
 import { cleanDatabase, seedTestRole } from "../../../test/db-utils.js";
 import { WRONG_PASSWORD } from "./fixtures.js";
 
+interface LoginResponseBody {
+  id: string;
+  email: string;
+  emailVerifiedAt: string | null;
+  name: { firstName: string; lastName: string } | null;
+  role: string;
+  permissions: string[];
+}
+
 describe("POST /auth/login - Integration Tests", () => {
   const app = createTestApp();
   let testRoleId: string;
@@ -34,7 +43,12 @@ describe("POST /auth/login - Integration Tests", () => {
         .send({ email: user.email, password: TEST_PASSWORD });
 
       expect(res.status).toBe(200);
-      expect(res.body).toEqual({ success: true });
+      const body = res.body as LoginResponseBody;
+      expect(body.id).toBe(user.id);
+      expect(body.email).toBe("test@example.com");
+      expect(body.emailVerifiedAt).not.toBeNull();
+      expect(body.role).toBe("user");
+      expect(body.permissions).toEqual([]);
       expectSessionCookie(res);
     });
 

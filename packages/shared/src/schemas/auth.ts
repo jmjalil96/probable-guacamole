@@ -14,7 +14,17 @@ export const loginRequestSchema = z.object({
 });
 
 export const loginResponseSchema = z.object({
-  success: z.literal(true),
+  id: z.string(),
+  email: z.string(),
+  emailVerifiedAt: z.string().nullable(),
+  name: z
+    .object({
+      firstName: z.string(),
+      lastName: z.string(),
+    })
+    .nullable(),
+  role: z.string(),
+  permissions: z.array(z.string()),
 });
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;

@@ -12,6 +12,15 @@ interface ErrorBody {
   error: { message: string; code: string; requestId: string };
 }
 
+interface LoginResponseBody {
+  id: string;
+  email: string;
+  emailVerifiedAt: string | null;
+  name: { firstName: string; lastName: string } | null;
+  role: string;
+  permissions: string[];
+}
+
 /**
  * Contract tests verify API shape and response structure.
  * These tests ensure the API contract remains stable.
@@ -78,14 +87,24 @@ describe("POST /auth/login - Contract Tests", () => {
   });
 
   describe("Success response shape", () => {
-    it("should return { success: true } on successful login", async () => {
+    it("should return user data on successful login", async () => {
       const user = await testUserFactories.verified(testRoleId);
 
       const res = await request(app)
         .post("/auth/login")
         .send({ email: user.email, password: TEST_PASSWORD });
 
-      expect(res.body).toEqual({ success: true });
+      const body = res.body as LoginResponseBody;
+      expect(body).toHaveProperty("id");
+      expect(body).toHaveProperty("email");
+      expect(body).toHaveProperty("emailVerifiedAt");
+      expect(body).toHaveProperty("name");
+      expect(body).toHaveProperty("role");
+      expect(body).toHaveProperty("permissions");
+      expect(body.id).toBe(user.id);
+      expect(body.email).toBe(user.email);
+      expect(body.role).toBe("user");
+      expect(Array.isArray(body.permissions)).toBe(true);
     });
 
     it("should set correct cookie attributes", async () => {

@@ -36,7 +36,7 @@ router.post(
   async (req, res, next) => {
     try {
       const requestId = res.locals.requestId as string | undefined;
-      const { sessionToken, expiresAt } = await login({
+      const { sessionToken, expiresAt, user } = await login({
         email: req.body.email,
         password: req.body.password,
         ip: req.ip ?? null,
@@ -46,7 +46,7 @@ router.post(
 
       setSessionCookie(res, sessionToken, expiresAt);
 
-      const response: LoginResponse = { success: true };
+      const response: LoginResponse = user;
       res.json(response);
     } catch (err) {
       next(err);

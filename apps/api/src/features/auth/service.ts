@@ -57,6 +57,14 @@ export interface LoginParams {
 export interface LoginResult {
   sessionToken: string;
   expiresAt: Date;
+  user: {
+    id: string;
+    email: string;
+    emailVerifiedAt: string | null;
+    name: { firstName: string; lastName: string } | null;
+    role: string;
+    permissions: string[];
+  };
 }
 
 // =============================================================================
@@ -180,7 +188,37 @@ export async function login(params: LoginParams): Promise<LoginResult> {
     { ...auditContext, sessionId: session.id }
   );
 
-  return { sessionToken, expiresAt };
+  // Fetch user data with profile and permissions
+  const userWithProfile = await repo.findUserWithProfileAndPermissions(userId);
+  if (!userWithProfile) {
+    throw AppError.unauthorized();
+  }
+
+  const profile =
+    userWithProfile.employee ??
+    userWithProfile.agent ??
+    userWithProfile.clientAdmin ??
+    userWithProfile.affiliate;
+  const name = profile
+    ? { firstName: profile.firstName, lastName: profile.lastName }
+    : null;
+
+  const permissions = userWithProfile.role.permissions.map(
+    (rp) => `${rp.permission.resource}:${rp.permission.action}`
+  );
+
+  return {
+    sessionToken,
+    expiresAt,
+    user: {
+      id: userWithProfile.id,
+      email: userWithProfile.email,
+      emailVerifiedAt: userWithProfile.emailVerifiedAt?.toISOString() ?? null,
+      name,
+      role: userWithProfile.role.name,
+      permissions,
+    },
+  };
 }
 
 // =============================================================================
