@@ -5,3 +5,11 @@ dist/
 !.env.example
 *.log
 .DS_Store
+
+# IDE
+.cursor/
+
+# Test artifacts
+coverage/
+playwright-report/
+test-results/

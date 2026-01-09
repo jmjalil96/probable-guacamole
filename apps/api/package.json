@@ -17,9 +17,9 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test": "dotenv -e .env.test -- vitest",
+    "test:run": "dotenv -e .env.test -- vitest run",
+    "test:coverage": "dotenv -e .env.test -- vitest run --coverage",
     "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force",
     "pretest": "dotenv -e .env.test -- prisma migrate deploy"
   },

@@ -20,6 +20,8 @@ export async function cleanDatabase() {
     // Files
     db.file.deleteMany(),
     db.pendingUpload.deleteMany(),
+    // Notes
+    db.note.deleteMany(),
     // Claims
     db.claimInvoice.deleteMany(),
     db.claimHistory.deleteMany(),

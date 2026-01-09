@@ -17,6 +17,7 @@ import * as service from "./service.js";
 import { transitionsRouter } from "./transitions/index.js";
 import { claimInvoicesRouter } from "./invoices/index.js";
 import { claimFilesEntityRouter } from "./files/index.js";
+import { claimNotesRouter } from "./notes/index.js";
 import { claimAuditTrailRouter } from "./audit-trail/index.js";
 import { lookupsRouter } from "./lookups/index.js";
 
@@ -33,6 +34,9 @@ router.use("/:id/invoices", claimInvoicesRouter);
 
 // Mount files endpoints (/:id/files)
 router.use("/:id/files", claimFilesEntityRouter);
+
+// Mount notes endpoints (/:id/notes)
+router.use("/:id/notes", claimNotesRouter);
 
 // Mount audit-trail endpoints (/:id/audit-trail)
 router.use("/:id/audit-trail", claimAuditTrailRouter);

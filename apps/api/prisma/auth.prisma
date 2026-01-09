@@ -63,6 +63,11 @@ model User {
   pendingUploads PendingUpload[]
   filesCreated   File[]
 
+  // Notes (polymorphic)
+  notesCreated Note[] @relation("NoteCreator")
+  notesUpdated Note[] @relation("NoteUpdater")
+  notesDeleted Note[] @relation("NoteDeleter")
+
   @@index([email])
   @@index([roleId])
   @@map("users")

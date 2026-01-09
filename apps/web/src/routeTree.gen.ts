@@ -19,6 +19,10 @@ import { Route as GuestForgotPasswordRouteImport } from './routes/_guest/forgot-
 import { Route as GuestAcceptInvitationRouteImport } from './routes/_guest/accept-invitation'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/_app/index'
+import { Route as AuthenticatedAppNewClaimRouteImport } from './routes/_authenticated/_app/new-claim'
+import { Route as AuthenticatedAppClaimsRouteImport } from './routes/_authenticated/_app/claims'
+import { Route as AuthenticatedAppClaimsIndexRouteImport } from './routes/_authenticated/_app/claims.index'
+import { Route as AuthenticatedAppClaimsClaimIdRouteImport } from './routes/_authenticated/_app/claims.$claimId'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -67,6 +71,29 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppNewClaimRoute =
+  AuthenticatedAppNewClaimRouteImport.update({
+    id: '/new-claim',
+    path: '/new-claim',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppClaimsRoute = AuthenticatedAppClaimsRouteImport.update({
+  id: '/claims',
+  path: '/claims',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppClaimsIndexRoute =
+  AuthenticatedAppClaimsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAppClaimsRoute,
+  } as any)
+const AuthenticatedAppClaimsClaimIdRoute =
+  AuthenticatedAppClaimsClaimIdRouteImport.update({
+    id: '/$claimId',
+    path: '/$claimId',
+    getParentRoute: () => AuthenticatedAppClaimsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/brand': typeof BrandRoute
@@ -75,7 +102,11 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof GuestForgotPasswordRoute
   '/login': typeof GuestLoginRoute
   '/reset-password': typeof GuestResetPasswordRoute
+  '/claims': typeof AuthenticatedAppClaimsRouteWithChildren
+  '/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/': typeof AuthenticatedAppIndexRoute
+  '/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/claims/': typeof AuthenticatedAppClaimsIndexRoute
 }
 export interface FileRoutesByTo {
   '/brand': typeof BrandRoute
@@ -84,7 +115,10 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof GuestForgotPasswordRoute
   '/login': typeof GuestLoginRoute
   '/reset-password': typeof GuestResetPasswordRoute
+  '/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/': typeof AuthenticatedAppIndexRoute
+  '/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/claims': typeof AuthenticatedAppClaimsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,7 +131,11 @@ export interface FileRoutesById {
   '/_guest/forgot-password': typeof GuestForgotPasswordRoute
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/reset-password': typeof GuestResetPasswordRoute
+  '/_authenticated/_app/claims': typeof AuthenticatedAppClaimsRouteWithChildren
+  '/_authenticated/_app/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/_authenticated/_app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/_app/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/_authenticated/_app/claims/': typeof AuthenticatedAppClaimsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -108,7 +146,11 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/reset-password'
+    | '/claims'
+    | '/new-claim'
     | '/'
+    | '/claims/$claimId'
+    | '/claims/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/brand'
@@ -117,7 +159,10 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/reset-password'
+    | '/new-claim'
     | '/'
+    | '/claims/$claimId'
+    | '/claims'
   id:
     | '__root__'
     | '/_authenticated'
@@ -129,7 +174,11 @@ export interface FileRouteTypes {
     | '/_guest/forgot-password'
     | '/_guest/login'
     | '/_guest/reset-password'
+    | '/_authenticated/_app/claims'
+    | '/_authenticated/_app/new-claim'
     | '/_authenticated/_app/'
+    | '/_authenticated/_app/claims/$claimId'
+    | '/_authenticated/_app/claims/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -211,14 +260,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/new-claim': {
+      id: '/_authenticated/_app/new-claim'
+      path: '/new-claim'
+      fullPath: '/new-claim'
+      preLoaderRoute: typeof AuthenticatedAppNewClaimRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/claims': {
+      id: '/_authenticated/_app/claims'
+      path: '/claims'
+      fullPath: '/claims'
+      preLoaderRoute: typeof AuthenticatedAppClaimsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/claims/': {
+      id: '/_authenticated/_app/claims/'
+      path: '/'
+      fullPath: '/claims/'
+      preLoaderRoute: typeof AuthenticatedAppClaimsIndexRouteImport
+      parentRoute: typeof AuthenticatedAppClaimsRoute
+    }
+    '/_authenticated/_app/claims/$claimId': {
+      id: '/_authenticated/_app/claims/$claimId'
+      path: '/$claimId'
+      fullPath: '/claims/$claimId'
+      preLoaderRoute: typeof AuthenticatedAppClaimsClaimIdRouteImport
+      parentRoute: typeof AuthenticatedAppClaimsRoute
+    }
   }
 }
 
+interface AuthenticatedAppClaimsRouteChildren {
+  AuthenticatedAppClaimsClaimIdRoute: typeof AuthenticatedAppClaimsClaimIdRoute
+  AuthenticatedAppClaimsIndexRoute: typeof AuthenticatedAppClaimsIndexRoute
+}
+
+const AuthenticatedAppClaimsRouteChildren: AuthenticatedAppClaimsRouteChildren =
+  {
+    AuthenticatedAppClaimsClaimIdRoute: AuthenticatedAppClaimsClaimIdRoute,
+    AuthenticatedAppClaimsIndexRoute: AuthenticatedAppClaimsIndexRoute,
+  }
+
+const AuthenticatedAppClaimsRouteWithChildren =
+  AuthenticatedAppClaimsRoute._addFileChildren(
+    AuthenticatedAppClaimsRouteChildren,
+  )
+
 interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppClaimsRoute: typeof AuthenticatedAppClaimsRouteWithChildren
+  AuthenticatedAppNewClaimRoute: typeof AuthenticatedAppNewClaimRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppClaimsRoute: AuthenticatedAppClaimsRouteWithChildren,
+  AuthenticatedAppNewClaimRoute: AuthenticatedAppNewClaimRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 

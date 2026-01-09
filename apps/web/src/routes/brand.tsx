@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Spinner } from "@/components/ui/loading";
-import { toast } from "@/lib/toast";
+import { Spinner } from "@/components/ui";
+import { toast } from "@/lib/utils";
 
 export const Route = createFileRoute("/brand")({
   component: BrandPage,

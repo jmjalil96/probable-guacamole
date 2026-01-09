@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
 // Re-export state machine from shared package
-export * from "shared/schemas/claim-state-machine";
+export * from "shared/schemas/claims/state-machine";
 
 export const ORDER_BY_MAP: Record<
   string,

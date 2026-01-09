@@ -1,6 +1,6 @@
 import axios, { type AxiosError } from "axios";
 import { ApiError, type ApiErrorDetails } from "./errors";
-import { queryClient } from "@/lib/query";
+import { queryClient } from "./query-client";
 
 interface ApiErrorResponse {
   error?: {

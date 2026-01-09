@@ -1,7 +1,7 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "./router";
-import { useAuthSync } from "@/lib/auth";
-import { LoadingScreen } from "@/components/ui/loading";
+import { useAuthSync } from "@/features/auth";
+import { LoadingScreen } from "@/components/ui";
 import { ErrorScreen } from "@/components/error-boundary";
 
 export function App() {

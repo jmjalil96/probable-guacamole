@@ -1,0 +1,40 @@
+// =============================================================================
+// Models
+// =============================================================================
+
+/// Polymorphic notes - attachable to any entity
+model Note {
+  id String @id @default(cuid())
+
+  // Polymorphic reference
+  entityType String // "Claim", "Policy", "Invoice", "Ticket", "Document"
+  entityId   String // The parent record's ID
+
+  // Content
+  content String @db.Text
+
+  // Visibility
+  isInternal Boolean @default(false) // true = staff-only (UNLIMITED scope)
+
+  // Edit tracking
+  isEdited Boolean @default(false)
+
+  // Soft delete
+  deletedAt   DateTime?
+  deletedById String?
+  deletedBy   User?     @relation("NoteDeleter", fields: [deletedById], references: [id])
+
+  // Audit
+  createdById String
+  createdBy   User     @relation("NoteCreator", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?    @relation("NoteUpdater", fields: [updatedById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([entityType, entityId])
+  @@index([entityType, entityId, deletedAt])
+  @@index([createdById])
+  @@index([createdAt])
+  @@map("notes")
+}

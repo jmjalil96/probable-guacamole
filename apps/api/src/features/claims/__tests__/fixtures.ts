@@ -781,6 +781,70 @@ export async function createTestClaimHistory(options: CreateClaimHistoryOptions)
 }
 
 // =============================================================================
+// Note Factory
+// =============================================================================
+
+export interface CreateTestNoteOptions {
+  entityType?: string;
+  entityId: string;
+  createdById: string;
+  content?: string;
+  isInternal?: boolean;
+  isEdited?: boolean;
+  updatedById?: string | null;
+  deletedAt?: Date | null;
+  deletedById?: string | null;
+}
+
+export async function createTestNote(options: CreateTestNoteOptions) {
+  const {
+    entityType = "Claim",
+    entityId,
+    createdById,
+    content = `Test note content ${Date.now()}`,
+    isInternal = false,
+    isEdited = false,
+    updatedById = null,
+    deletedAt = null,
+    deletedById = null,
+  } = options;
+
+  return db.note.create({
+    data: {
+      entityType,
+      entityId,
+      content,
+      isInternal,
+      isEdited,
+      createdById,
+      updatedById,
+      deletedAt,
+      deletedById,
+    },
+    include: {
+      createdBy: {
+        select: {
+          id: true,
+          employee: { select: { firstName: true, lastName: true } },
+          agent: { select: { firstName: true, lastName: true } },
+          clientAdmin: { select: { firstName: true, lastName: true } },
+          affiliate: { select: { firstName: true, lastName: true } },
+        },
+      },
+      updatedBy: {
+        select: {
+          id: true,
+          employee: { select: { firstName: true, lastName: true } },
+          agent: { select: { firstName: true, lastName: true } },
+          clientAdmin: { select: { firstName: true, lastName: true } },
+          affiliate: { select: { firstName: true, lastName: true } },
+        },
+      },
+    },
+  });
+}
+
+// =============================================================================
 // Test Constants
 // =============================================================================
 

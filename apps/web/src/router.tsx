@@ -2,7 +2,7 @@ import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { MeResponse } from "shared";
-import { LoadingScreen } from "@/components/ui/loading";
+import { LoadingScreen } from "@/components/ui";
 
 export interface RouterContext {
   auth: UseQueryResult<MeResponse | null, Error>;

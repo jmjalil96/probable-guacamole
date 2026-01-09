@@ -10,13 +10,13 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./schemas/auth": {
-      "types": "./dist/schemas/auth.d.ts",
-      "default": "./dist/schemas/auth.js"
+    "./schemas/claims/state-machine": {
+      "types": "./dist/schemas/claims/state-machine.d.ts",
+      "default": "./dist/schemas/claims/state-machine.js"
     },
-    "./schemas/claim-state-machine": {
-      "types": "./dist/schemas/claim-state-machine.d.ts",
-      "default": "./dist/schemas/claim-state-machine.js"
+    "./lib": {
+      "types": "./dist/lib/index.d.ts",
+      "default": "./dist/lib/index.js"
     }
   },
   "scripts": {

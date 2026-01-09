@@ -36,6 +36,7 @@ async function seed() {
   // Clear all data in reverse FK order
   await db.$transaction([
     db.auditLog.deleteMany(),
+    db.note.deleteMany(),
     db.file.deleteMany(),
     db.pendingUpload.deleteMany(),
     db.documentAccess.deleteMany(),
