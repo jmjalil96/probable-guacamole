@@ -27,7 +27,7 @@ import {
   type FilterHandlers,
   type SheetState,
 } from "./filters.components";
-import type { KanbanColumnData, ClaimsColumns } from "./types";
+import type { KanbanColumnData } from "./types";
 
 // Re-export filter types and components for public API
 export {
@@ -156,7 +156,7 @@ export function ClaimsViewLayout({
 
 export interface ClaimsTableProps {
   data: ClaimListItem[];
-  columns: ClaimsColumns;
+  columns: typeof claimsColumns;
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;

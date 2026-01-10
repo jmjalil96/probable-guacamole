@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   FilePlus,
   FileText,
+  Building2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -27,5 +28,10 @@ export const navigation: NavItem[] = [
     label: "Reclamos",
     to: "/claims",
     icon: FileText,
+  },
+  {
+    label: "Aseguradoras",
+    to: "/insurers",
+    icon: Building2,
   },
 ];

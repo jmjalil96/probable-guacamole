@@ -108,6 +108,10 @@ async function seed() {
     { resource: "documents", action: "create" },
     { resource: "documents", action: "edit" },
     { resource: "audit", action: "read" },
+    { resource: "insurers", action: "read" },
+    { resource: "insurers", action: "create" },
+    { resource: "insurers", action: "edit" },
+    { resource: "insurers", action: "delete" },
   ];
 
   const permissions: Record<string, { id: string }> = {};
@@ -185,7 +189,7 @@ async function seed() {
     })),
   });
 
-  // employee: claims:*, policies:read, invoices:*, tickets:*, documents:*, audit:read
+  // employee: claims:*, policies:read, invoices:*, tickets:*, documents:*, audit:read, insurers:read
   const employeePerms = [
     "claims:read", "claims:create", "claims:edit", "claims:delete",
     "policies:read",
@@ -193,6 +197,7 @@ async function seed() {
     "tickets:read", "tickets:create", "tickets:edit", "tickets:close",
     "documents:read", "documents:create", "documents:edit",
     "audit:read",
+    "insurers:read",
   ];
   await db.rolePermission.createMany({
     data: employeePerms.map((p) => ({

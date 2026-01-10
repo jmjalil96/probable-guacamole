@@ -17,7 +17,6 @@ export type {
   KanbanColumnData,
   UseKanbanColumnsReturn,
   UseClaimsKanbanReturn,
-  ClaimsColumns,
 } from "./types";
 
 // Hooks

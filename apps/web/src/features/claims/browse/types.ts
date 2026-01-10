@@ -182,10 +182,3 @@ export interface UseClaimsKanbanReturn {
 
 // =============================================================================
 // Column Type
-// =============================================================================
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ClaimsColumns = import("@tanstack/react-table").ColumnDef<
-  ClaimListItem,
-  any
->[];
