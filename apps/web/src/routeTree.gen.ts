@@ -21,10 +21,13 @@ import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_a
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/_app/index'
 import { Route as AuthenticatedAppNewClaimRouteImport } from './routes/_authenticated/_app/new-claim'
 import { Route as AuthenticatedAppInsurersRouteImport } from './routes/_authenticated/_app/insurers'
+import { Route as AuthenticatedAppClientsRouteImport } from './routes/_authenticated/_app/clients'
 import { Route as AuthenticatedAppClaimsRouteImport } from './routes/_authenticated/_app/claims'
 import { Route as AuthenticatedAppInsurersIndexRouteImport } from './routes/_authenticated/_app/insurers.index'
+import { Route as AuthenticatedAppClientsIndexRouteImport } from './routes/_authenticated/_app/clients.index'
 import { Route as AuthenticatedAppClaimsIndexRouteImport } from './routes/_authenticated/_app/claims.index'
 import { Route as AuthenticatedAppInsurersInsurerIdRouteImport } from './routes/_authenticated/_app/insurers.$insurerId'
+import { Route as AuthenticatedAppClientsClientIdRouteImport } from './routes/_authenticated/_app/clients.$clientId'
 import { Route as AuthenticatedAppClaimsClaimIdRouteImport } from './routes/_authenticated/_app/claims.$claimId'
 
 const TestRoute = TestRouteImport.update({
@@ -86,6 +89,11 @@ const AuthenticatedAppInsurersRoute =
     path: '/insurers',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppClientsRoute = AuthenticatedAppClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppClaimsRoute = AuthenticatedAppClaimsRouteImport.update({
   id: '/claims',
   path: '/claims',
@@ -96,6 +104,12 @@ const AuthenticatedAppInsurersIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAppInsurersRoute,
+  } as any)
+const AuthenticatedAppClientsIndexRoute =
+  AuthenticatedAppClientsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAppClientsRoute,
   } as any)
 const AuthenticatedAppClaimsIndexRoute =
   AuthenticatedAppClaimsIndexRouteImport.update({
@@ -108,6 +122,12 @@ const AuthenticatedAppInsurersInsurerIdRoute =
     id: '/$insurerId',
     path: '/$insurerId',
     getParentRoute: () => AuthenticatedAppInsurersRoute,
+  } as any)
+const AuthenticatedAppClientsClientIdRoute =
+  AuthenticatedAppClientsClientIdRouteImport.update({
+    id: '/$clientId',
+    path: '/$clientId',
+    getParentRoute: () => AuthenticatedAppClientsRoute,
   } as any)
 const AuthenticatedAppClaimsClaimIdRoute =
   AuthenticatedAppClaimsClaimIdRouteImport.update({
@@ -124,12 +144,15 @@ export interface FileRoutesByFullPath {
   '/login': typeof GuestLoginRoute
   '/reset-password': typeof GuestResetPasswordRoute
   '/claims': typeof AuthenticatedAppClaimsRouteWithChildren
+  '/clients': typeof AuthenticatedAppClientsRouteWithChildren
   '/insurers': typeof AuthenticatedAppInsurersRouteWithChildren
   '/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/': typeof AuthenticatedAppIndexRoute
   '/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/clients/$clientId': typeof AuthenticatedAppClientsClientIdRoute
   '/insurers/$insurerId': typeof AuthenticatedAppInsurersInsurerIdRoute
   '/claims/': typeof AuthenticatedAppClaimsIndexRoute
+  '/clients/': typeof AuthenticatedAppClientsIndexRoute
   '/insurers/': typeof AuthenticatedAppInsurersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -142,8 +165,10 @@ export interface FileRoutesByTo {
   '/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/': typeof AuthenticatedAppIndexRoute
   '/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/clients/$clientId': typeof AuthenticatedAppClientsClientIdRoute
   '/insurers/$insurerId': typeof AuthenticatedAppInsurersInsurerIdRoute
   '/claims': typeof AuthenticatedAppClaimsIndexRoute
+  '/clients': typeof AuthenticatedAppClientsIndexRoute
   '/insurers': typeof AuthenticatedAppInsurersIndexRoute
 }
 export interface FileRoutesById {
@@ -158,12 +183,15 @@ export interface FileRoutesById {
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/reset-password': typeof GuestResetPasswordRoute
   '/_authenticated/_app/claims': typeof AuthenticatedAppClaimsRouteWithChildren
+  '/_authenticated/_app/clients': typeof AuthenticatedAppClientsRouteWithChildren
   '/_authenticated/_app/insurers': typeof AuthenticatedAppInsurersRouteWithChildren
   '/_authenticated/_app/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/_authenticated/_app/': typeof AuthenticatedAppIndexRoute
   '/_authenticated/_app/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/_authenticated/_app/clients/$clientId': typeof AuthenticatedAppClientsClientIdRoute
   '/_authenticated/_app/insurers/$insurerId': typeof AuthenticatedAppInsurersInsurerIdRoute
   '/_authenticated/_app/claims/': typeof AuthenticatedAppClaimsIndexRoute
+  '/_authenticated/_app/clients/': typeof AuthenticatedAppClientsIndexRoute
   '/_authenticated/_app/insurers/': typeof AuthenticatedAppInsurersIndexRoute
 }
 export interface FileRouteTypes {
@@ -176,12 +204,15 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/claims'
+    | '/clients'
     | '/insurers'
     | '/new-claim'
     | '/'
     | '/claims/$claimId'
+    | '/clients/$clientId'
     | '/insurers/$insurerId'
     | '/claims/'
+    | '/clients/'
     | '/insurers/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -194,8 +225,10 @@ export interface FileRouteTypes {
     | '/new-claim'
     | '/'
     | '/claims/$claimId'
+    | '/clients/$clientId'
     | '/insurers/$insurerId'
     | '/claims'
+    | '/clients'
     | '/insurers'
   id:
     | '__root__'
@@ -209,12 +242,15 @@ export interface FileRouteTypes {
     | '/_guest/login'
     | '/_guest/reset-password'
     | '/_authenticated/_app/claims'
+    | '/_authenticated/_app/clients'
     | '/_authenticated/_app/insurers'
     | '/_authenticated/_app/new-claim'
     | '/_authenticated/_app/'
     | '/_authenticated/_app/claims/$claimId'
+    | '/_authenticated/_app/clients/$clientId'
     | '/_authenticated/_app/insurers/$insurerId'
     | '/_authenticated/_app/claims/'
+    | '/_authenticated/_app/clients/'
     | '/_authenticated/_app/insurers/'
   fileRoutesById: FileRoutesById
 }
@@ -311,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppInsurersRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/clients': {
+      id: '/_authenticated/_app/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof AuthenticatedAppClientsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/_app/claims': {
       id: '/_authenticated/_app/claims'
       path: '/claims'
@@ -325,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppInsurersIndexRouteImport
       parentRoute: typeof AuthenticatedAppInsurersRoute
     }
+    '/_authenticated/_app/clients/': {
+      id: '/_authenticated/_app/clients/'
+      path: '/'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof AuthenticatedAppClientsIndexRouteImport
+      parentRoute: typeof AuthenticatedAppClientsRoute
+    }
     '/_authenticated/_app/claims/': {
       id: '/_authenticated/_app/claims/'
       path: '/'
@@ -338,6 +388,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/insurers/$insurerId'
       preLoaderRoute: typeof AuthenticatedAppInsurersInsurerIdRouteImport
       parentRoute: typeof AuthenticatedAppInsurersRoute
+    }
+    '/_authenticated/_app/clients/$clientId': {
+      id: '/_authenticated/_app/clients/$clientId'
+      path: '/$clientId'
+      fullPath: '/clients/$clientId'
+      preLoaderRoute: typeof AuthenticatedAppClientsClientIdRouteImport
+      parentRoute: typeof AuthenticatedAppClientsRoute
     }
     '/_authenticated/_app/claims/$claimId': {
       id: '/_authenticated/_app/claims/$claimId'
@@ -365,6 +422,22 @@ const AuthenticatedAppClaimsRouteWithChildren =
     AuthenticatedAppClaimsRouteChildren,
   )
 
+interface AuthenticatedAppClientsRouteChildren {
+  AuthenticatedAppClientsClientIdRoute: typeof AuthenticatedAppClientsClientIdRoute
+  AuthenticatedAppClientsIndexRoute: typeof AuthenticatedAppClientsIndexRoute
+}
+
+const AuthenticatedAppClientsRouteChildren: AuthenticatedAppClientsRouteChildren =
+  {
+    AuthenticatedAppClientsClientIdRoute: AuthenticatedAppClientsClientIdRoute,
+    AuthenticatedAppClientsIndexRoute: AuthenticatedAppClientsIndexRoute,
+  }
+
+const AuthenticatedAppClientsRouteWithChildren =
+  AuthenticatedAppClientsRoute._addFileChildren(
+    AuthenticatedAppClientsRouteChildren,
+  )
+
 interface AuthenticatedAppInsurersRouteChildren {
   AuthenticatedAppInsurersInsurerIdRoute: typeof AuthenticatedAppInsurersInsurerIdRoute
   AuthenticatedAppInsurersIndexRoute: typeof AuthenticatedAppInsurersIndexRoute
@@ -384,6 +457,7 @@ const AuthenticatedAppInsurersRouteWithChildren =
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppClaimsRoute: typeof AuthenticatedAppClaimsRouteWithChildren
+  AuthenticatedAppClientsRoute: typeof AuthenticatedAppClientsRouteWithChildren
   AuthenticatedAppInsurersRoute: typeof AuthenticatedAppInsurersRouteWithChildren
   AuthenticatedAppNewClaimRoute: typeof AuthenticatedAppNewClaimRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
@@ -391,6 +465,7 @@ interface AuthenticatedAppRouteChildren {
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppClaimsRoute: AuthenticatedAppClaimsRouteWithChildren,
+  AuthenticatedAppClientsRoute: AuthenticatedAppClientsRouteWithChildren,
   AuthenticatedAppInsurersRoute: AuthenticatedAppInsurersRouteWithChildren,
   AuthenticatedAppNewClaimRoute: AuthenticatedAppNewClaimRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,

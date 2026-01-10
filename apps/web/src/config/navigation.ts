@@ -3,6 +3,7 @@ import {
   FilePlus,
   FileText,
   Building2,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 
@@ -33,5 +34,10 @@ export const navigation: NavItem[] = [
     label: "Aseguradoras",
     to: "/insurers",
     icon: Building2,
+  },
+  {
+    label: "Clientes",
+    to: "/clients",
+    icon: Users,
   },
 ];

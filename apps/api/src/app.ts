@@ -10,6 +10,7 @@ import { AppError } from "./lib/errors.js";
 import { authRouter } from "./features/auth/index.js";
 import { claimFilesRouter } from "./features/claims/files/index.js";
 import { claimsRouter } from "./features/claims/index.js";
+import { clientsRouter } from "./features/clients/index.js";
 import { insurersRouter } from "./features/insurers/index.js";
 import { invitationRouter } from "./features/invitation/index.js";
 
@@ -47,6 +48,7 @@ app.use("/auth", authRouter);
 app.use("/auth/invitations", invitationRouter);
 app.use("/claims", claimsRouter);
 app.use("/claims/files", claimFilesRouter);
+app.use("/clients", clientsRouter);
 app.use("/insurers", insurersRouter);
 
 app.use((req, _res, next) => {
