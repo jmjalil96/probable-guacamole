@@ -9,6 +9,7 @@ import { usersRouter } from "../../features/users/index.js";
 import { employeesRouter } from "../../features/employees/index.js";
 import { agentsRouter } from "../../features/agents/index.js";
 import { clientAdminsRouter } from "../../features/client-admins/index.js";
+import { affiliatesRouter } from "../../features/affiliates/index.js";
 import { errorHandler } from "../../middleware/error-handler.js";
 
 /**
@@ -38,6 +39,7 @@ export function createTestApp(): Express {
   app.use("/employees", employeesRouter);
   app.use("/agents", agentsRouter);
   app.use("/client-admins", clientAdminsRouter);
+  app.use("/affiliates", affiliatesRouter);
 
   // Error handler must be last
   app.use(errorHandler);

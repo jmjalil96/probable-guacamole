@@ -128,6 +128,10 @@ async function seed() {
     { resource: "clientAdmins", action: "create" },
     { resource: "clientAdmins", action: "edit" },
     { resource: "clientAdmins", action: "delete" },
+    { resource: "affiliates", action: "read" },
+    { resource: "affiliates", action: "create" },
+    { resource: "affiliates", action: "edit" },
+    { resource: "affiliates", action: "delete" },
   ];
 
   const permissions: Record<string, { id: string }> = {};

@@ -1,4 +1,5 @@
 import {
+  Fragment,
   forwardRef,
   type HTMLAttributes,
   type ReactNode,
@@ -8,11 +9,13 @@ import {
 import {
   useReactTable,
   getCoreRowModel,
+  getExpandedRowModel,
   flexRender,
   type ColumnDef,
   type SortingState,
   type PaginationState,
   type RowSelectionState,
+  type ExpandedState,
   type OnChangeFn,
   type Row,
   type Table,
@@ -61,6 +64,14 @@ export interface DataTableProps<TData> extends HTMLAttributes<HTMLDivElement> {
   rowSelection?: RowSelectionState;
   /** Callback when row selection changes. */
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
+
+  // Expansion state (optional)
+  /** Current expansion state. */
+  expanded?: ExpandedState;
+  /** Callback when expansion changes. */
+  onExpandedChange?: OnChangeFn<ExpandedState>;
+  /** Function to render expanded row content. */
+  renderExpandedRow?: (row: Row<TData>) => ReactNode;
 
   // Feature flags
   /** Enable row selection with checkboxes. @default false */
@@ -172,6 +183,9 @@ function DataTableRoot<TData>(
     pageCount = -1,
     rowSelection,
     onRowSelectionChange,
+    expanded,
+    onExpandedChange,
+    renderExpandedRow,
     enableRowSelection = false,
     enableSorting = false,
     enablePagination = false,
@@ -183,26 +197,34 @@ function DataTableRoot<TData>(
   }: DataTableProps<TData>,
   ref: React.ForwardedRef<HTMLDivElement>
 ) {
+  // Determine if expansion is enabled
+  const enableExpansion = expanded !== undefined;
+
   // TanStack Table returns non-memoizable functions, incompatible with React Compiler
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSubRows: (row) => (row as { subRows?: TData[] }).subRows,
+    ...(enableExpansion && { getExpandedRowModel: getExpandedRowModel() }),
 
     // Server-side modes
     manualSorting: true,
     manualPagination: true,
+    manualExpanding: false, // Client-side expansion
 
     // Controlled state (never pass undefined)
     state: {
       sorting: sorting ?? [],
       pagination: pagination ?? { pageIndex: 0, pageSize: 10 },
       rowSelection: rowSelection ?? {},
+      ...(enableExpansion && { expanded }),
     },
     ...(onSortingChange && { onSortingChange }),
     ...(onPaginationChange && { onPaginationChange }),
     ...(onRowSelectionChange && { onRowSelectionChange }),
+    ...(onExpandedChange && { onExpandedChange }),
 
     // Configuration
     enableRowSelection,
@@ -279,6 +301,8 @@ function DataTableRoot<TData>(
                 const isSelected = enableRowSelection
                   ? row.getIsSelected()
                   : false;
+                const isExpanded = enableExpansion && row.getIsExpanded();
+                const isChildRow = row.depth > 0;
 
                 const handleRowClick = onRowClick
                   ? (e: MouseEvent<HTMLTableRowElement>) => {
@@ -298,38 +322,52 @@ function DataTableRoot<TData>(
                   : undefined;
 
                 return (
-                  <tr
-                    key={row.id}
-                    data-selected={isSelected}
-                    className={cn(
-                      tableRowVariants(),
-                      onRowClick &&
-                        "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40"
+                  <Fragment key={row.id}>
+                    <tr
+                      data-selected={isSelected}
+                      data-expanded={isExpanded}
+                      className={cn(
+                        tableRowVariants(),
+                        isChildRow &&
+                          "bg-surface-muted/50 h-12 border-l-2 border-primary/10",
+                        onRowClick &&
+                          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40"
+                      )}
+                      onClick={handleRowClick}
+                      onKeyDown={handleRowKeyDown}
+                      tabIndex={onRowClick ? 0 : undefined}
+                      role={onRowClick ? "button" : undefined}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className={tableCellVariants({
+                            width:
+                              cell.column.id === "select"
+                                ? "checkbox"
+                                : cell.column.id === "actions"
+                                  ? "actions"
+                                  : cell.column.id === "expand"
+                                    ? "checkbox"
+                                    : "auto",
+                          })}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                    {/* Expanded row content */}
+                    {isExpanded && renderExpandedRow && (
+                      <tr className="bg-white">
+                        <td colSpan={columns.length} className="p-0">
+                          {renderExpandedRow(row)}
+                        </td>
+                      </tr>
                     )}
-                    onClick={handleRowClick}
-                    onKeyDown={handleRowKeyDown}
-                    tabIndex={onRowClick ? 0 : undefined}
-                    role={onRowClick ? "button" : undefined}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className={tableCellVariants({
-                          width:
-                            cell.column.id === "select"
-                              ? "checkbox"
-                              : cell.column.id === "actions"
-                                ? "actions"
-                                : "auto",
-                        })}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
+                  </Fragment>
                 );
               })
             )}

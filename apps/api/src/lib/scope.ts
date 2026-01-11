@@ -72,6 +72,25 @@ export function scopeToClaimWhere(scope: ScopeFilter): Prisma.ClaimWhereInput {
   }
 }
 
+export function scopeToAffiliateWhere(scope: ScopeFilter): Prisma.AffiliateWhereInput {
+  switch (scope.type) {
+    case "unlimited":
+      return {};
+    case "client":
+      return { clientId: { in: scope.clientIds } };
+    case "self":
+      // SELF scope: see own affiliate + dependents where they are the primary
+      return scope.affiliateId
+        ? {
+            OR: [
+              { id: scope.affiliateId },
+              { primaryAffiliateId: scope.affiliateId },
+            ],
+          }
+        : { id: { in: [] } }; // No access if no affiliate
+  }
+}
+
 // =============================================================================
 // Scope Validation for Create Operations
 // =============================================================================

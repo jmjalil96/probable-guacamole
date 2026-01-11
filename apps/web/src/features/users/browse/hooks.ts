@@ -57,7 +57,12 @@ export function useUsersList(): UseUsersListReturn {
             params: { clientAdminId: user.id },
           });
           break;
-        // affiliate - no detail view yet
+        case "affiliate":
+          void navigate({
+            to: "/affiliates/$affiliateId",
+            params: { affiliateId: user.id },
+          });
+          break;
       }
     },
     [navigate]

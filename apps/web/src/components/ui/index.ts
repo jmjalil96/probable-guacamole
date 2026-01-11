@@ -153,16 +153,19 @@ export {
   DataTable,
   ColumnHeader,
   Pagination,
+  ExpandToggle,
   createColumnHelper,
 } from "./data-display/tables";
 export type {
   DataTableProps,
   ColumnHeaderProps,
   PaginationProps,
+  ExpandToggleProps,
   ColumnDef,
   SortingState,
   PaginationState,
   RowSelectionState,
+  ExpandedState,
 } from "./data-display/tables";
 
 /** Activity/timeline feed */
