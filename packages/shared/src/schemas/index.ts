@@ -4,3 +4,7 @@ export * from "./clients/index.js";
 export * from "./insurers/index.js";
 export * from "./invitations/index.js";
 export * from "./notes/index.js";
+export * from "./users/index.js";
+export * from "./employees/index.js";
+export * from "./agents/index.js";
+export * from "./client-admins/index.js";

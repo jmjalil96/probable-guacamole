@@ -1,0 +1,1 @@
+export { ClientAdminDetailView } from "./components";

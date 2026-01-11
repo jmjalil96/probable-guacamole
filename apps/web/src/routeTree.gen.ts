@@ -19,16 +19,21 @@ import { Route as GuestForgotPasswordRouteImport } from './routes/_guest/forgot-
 import { Route as GuestAcceptInvitationRouteImport } from './routes/_guest/accept-invitation'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/_app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/_app/index'
+import { Route as AuthenticatedAppUsersRouteImport } from './routes/_authenticated/_app/users'
 import { Route as AuthenticatedAppNewClaimRouteImport } from './routes/_authenticated/_app/new-claim'
 import { Route as AuthenticatedAppInsurersRouteImport } from './routes/_authenticated/_app/insurers'
 import { Route as AuthenticatedAppClientsRouteImport } from './routes/_authenticated/_app/clients'
 import { Route as AuthenticatedAppClaimsRouteImport } from './routes/_authenticated/_app/claims'
+import { Route as AuthenticatedAppUsersIndexRouteImport } from './routes/_authenticated/_app/users.index'
 import { Route as AuthenticatedAppInsurersIndexRouteImport } from './routes/_authenticated/_app/insurers.index'
 import { Route as AuthenticatedAppClientsIndexRouteImport } from './routes/_authenticated/_app/clients.index'
 import { Route as AuthenticatedAppClaimsIndexRouteImport } from './routes/_authenticated/_app/claims.index'
 import { Route as AuthenticatedAppInsurersInsurerIdRouteImport } from './routes/_authenticated/_app/insurers.$insurerId'
+import { Route as AuthenticatedAppEmployeesEmployeeIdRouteImport } from './routes/_authenticated/_app/employees.$employeeId'
 import { Route as AuthenticatedAppClientsClientIdRouteImport } from './routes/_authenticated/_app/clients.$clientId'
+import { Route as AuthenticatedAppClientAdminsClientAdminIdRouteImport } from './routes/_authenticated/_app/client-admins.$clientAdminId'
 import { Route as AuthenticatedAppClaimsClaimIdRouteImport } from './routes/_authenticated/_app/claims.$claimId'
+import { Route as AuthenticatedAppAgentsAgentIdRouteImport } from './routes/_authenticated/_app/agents.$agentId'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -77,6 +82,11 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppUsersRoute = AuthenticatedAppUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppNewClaimRoute =
   AuthenticatedAppNewClaimRouteImport.update({
     id: '/new-claim',
@@ -99,6 +109,12 @@ const AuthenticatedAppClaimsRoute = AuthenticatedAppClaimsRouteImport.update({
   path: '/claims',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppUsersIndexRoute =
+  AuthenticatedAppUsersIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAppUsersRoute,
+  } as any)
 const AuthenticatedAppInsurersIndexRoute =
   AuthenticatedAppInsurersIndexRouteImport.update({
     id: '/',
@@ -123,17 +139,35 @@ const AuthenticatedAppInsurersInsurerIdRoute =
     path: '/$insurerId',
     getParentRoute: () => AuthenticatedAppInsurersRoute,
   } as any)
+const AuthenticatedAppEmployeesEmployeeIdRoute =
+  AuthenticatedAppEmployeesEmployeeIdRouteImport.update({
+    id: '/employees/$employeeId',
+    path: '/employees/$employeeId',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppClientsClientIdRoute =
   AuthenticatedAppClientsClientIdRouteImport.update({
     id: '/$clientId',
     path: '/$clientId',
     getParentRoute: () => AuthenticatedAppClientsRoute,
   } as any)
+const AuthenticatedAppClientAdminsClientAdminIdRoute =
+  AuthenticatedAppClientAdminsClientAdminIdRouteImport.update({
+    id: '/client-admins/$clientAdminId',
+    path: '/client-admins/$clientAdminId',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppClaimsClaimIdRoute =
   AuthenticatedAppClaimsClaimIdRouteImport.update({
     id: '/$claimId',
     path: '/$claimId',
     getParentRoute: () => AuthenticatedAppClaimsRoute,
+  } as any)
+const AuthenticatedAppAgentsAgentIdRoute =
+  AuthenticatedAppAgentsAgentIdRouteImport.update({
+    id: '/agents/$agentId',
+    path: '/agents/$agentId',
+    getParentRoute: () => AuthenticatedAppRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -147,13 +181,18 @@ export interface FileRoutesByFullPath {
   '/clients': typeof AuthenticatedAppClientsRouteWithChildren
   '/insurers': typeof AuthenticatedAppInsurersRouteWithChildren
   '/new-claim': typeof AuthenticatedAppNewClaimRoute
+  '/users': typeof AuthenticatedAppUsersRouteWithChildren
   '/': typeof AuthenticatedAppIndexRoute
+  '/agents/$agentId': typeof AuthenticatedAppAgentsAgentIdRoute
   '/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/client-admins/$clientAdminId': typeof AuthenticatedAppClientAdminsClientAdminIdRoute
   '/clients/$clientId': typeof AuthenticatedAppClientsClientIdRoute
+  '/employees/$employeeId': typeof AuthenticatedAppEmployeesEmployeeIdRoute
   '/insurers/$insurerId': typeof AuthenticatedAppInsurersInsurerIdRoute
   '/claims/': typeof AuthenticatedAppClaimsIndexRoute
   '/clients/': typeof AuthenticatedAppClientsIndexRoute
   '/insurers/': typeof AuthenticatedAppInsurersIndexRoute
+  '/users/': typeof AuthenticatedAppUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/brand': typeof BrandRoute
@@ -164,12 +203,16 @@ export interface FileRoutesByTo {
   '/reset-password': typeof GuestResetPasswordRoute
   '/new-claim': typeof AuthenticatedAppNewClaimRoute
   '/': typeof AuthenticatedAppIndexRoute
+  '/agents/$agentId': typeof AuthenticatedAppAgentsAgentIdRoute
   '/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/client-admins/$clientAdminId': typeof AuthenticatedAppClientAdminsClientAdminIdRoute
   '/clients/$clientId': typeof AuthenticatedAppClientsClientIdRoute
+  '/employees/$employeeId': typeof AuthenticatedAppEmployeesEmployeeIdRoute
   '/insurers/$insurerId': typeof AuthenticatedAppInsurersInsurerIdRoute
   '/claims': typeof AuthenticatedAppClaimsIndexRoute
   '/clients': typeof AuthenticatedAppClientsIndexRoute
   '/insurers': typeof AuthenticatedAppInsurersIndexRoute
+  '/users': typeof AuthenticatedAppUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,13 +229,18 @@ export interface FileRoutesById {
   '/_authenticated/_app/clients': typeof AuthenticatedAppClientsRouteWithChildren
   '/_authenticated/_app/insurers': typeof AuthenticatedAppInsurersRouteWithChildren
   '/_authenticated/_app/new-claim': typeof AuthenticatedAppNewClaimRoute
+  '/_authenticated/_app/users': typeof AuthenticatedAppUsersRouteWithChildren
   '/_authenticated/_app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/_app/agents/$agentId': typeof AuthenticatedAppAgentsAgentIdRoute
   '/_authenticated/_app/claims/$claimId': typeof AuthenticatedAppClaimsClaimIdRoute
+  '/_authenticated/_app/client-admins/$clientAdminId': typeof AuthenticatedAppClientAdminsClientAdminIdRoute
   '/_authenticated/_app/clients/$clientId': typeof AuthenticatedAppClientsClientIdRoute
+  '/_authenticated/_app/employees/$employeeId': typeof AuthenticatedAppEmployeesEmployeeIdRoute
   '/_authenticated/_app/insurers/$insurerId': typeof AuthenticatedAppInsurersInsurerIdRoute
   '/_authenticated/_app/claims/': typeof AuthenticatedAppClaimsIndexRoute
   '/_authenticated/_app/clients/': typeof AuthenticatedAppClientsIndexRoute
   '/_authenticated/_app/insurers/': typeof AuthenticatedAppInsurersIndexRoute
+  '/_authenticated/_app/users/': typeof AuthenticatedAppUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -207,13 +255,18 @@ export interface FileRouteTypes {
     | '/clients'
     | '/insurers'
     | '/new-claim'
+    | '/users'
     | '/'
+    | '/agents/$agentId'
     | '/claims/$claimId'
+    | '/client-admins/$clientAdminId'
     | '/clients/$clientId'
+    | '/employees/$employeeId'
     | '/insurers/$insurerId'
     | '/claims/'
     | '/clients/'
     | '/insurers/'
+    | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/brand'
@@ -224,12 +277,16 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/new-claim'
     | '/'
+    | '/agents/$agentId'
     | '/claims/$claimId'
+    | '/client-admins/$clientAdminId'
     | '/clients/$clientId'
+    | '/employees/$employeeId'
     | '/insurers/$insurerId'
     | '/claims'
     | '/clients'
     | '/insurers'
+    | '/users'
   id:
     | '__root__'
     | '/_authenticated'
@@ -245,13 +302,18 @@ export interface FileRouteTypes {
     | '/_authenticated/_app/clients'
     | '/_authenticated/_app/insurers'
     | '/_authenticated/_app/new-claim'
+    | '/_authenticated/_app/users'
     | '/_authenticated/_app/'
+    | '/_authenticated/_app/agents/$agentId'
     | '/_authenticated/_app/claims/$claimId'
+    | '/_authenticated/_app/client-admins/$clientAdminId'
     | '/_authenticated/_app/clients/$clientId'
+    | '/_authenticated/_app/employees/$employeeId'
     | '/_authenticated/_app/insurers/$insurerId'
     | '/_authenticated/_app/claims/'
     | '/_authenticated/_app/clients/'
     | '/_authenticated/_app/insurers/'
+    | '/_authenticated/_app/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -333,6 +395,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/_app/users': {
+      id: '/_authenticated/_app/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof AuthenticatedAppUsersRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/_app/new-claim': {
       id: '/_authenticated/_app/new-claim'
       path: '/new-claim'
@@ -360,6 +429,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/claims'
       preLoaderRoute: typeof AuthenticatedAppClaimsRouteImport
       parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/_app/users/': {
+      id: '/_authenticated/_app/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof AuthenticatedAppUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedAppUsersRoute
     }
     '/_authenticated/_app/insurers/': {
       id: '/_authenticated/_app/insurers/'
@@ -389,6 +465,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppInsurersInsurerIdRouteImport
       parentRoute: typeof AuthenticatedAppInsurersRoute
     }
+    '/_authenticated/_app/employees/$employeeId': {
+      id: '/_authenticated/_app/employees/$employeeId'
+      path: '/employees/$employeeId'
+      fullPath: '/employees/$employeeId'
+      preLoaderRoute: typeof AuthenticatedAppEmployeesEmployeeIdRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/_app/clients/$clientId': {
       id: '/_authenticated/_app/clients/$clientId'
       path: '/$clientId'
@@ -396,12 +479,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppClientsClientIdRouteImport
       parentRoute: typeof AuthenticatedAppClientsRoute
     }
+    '/_authenticated/_app/client-admins/$clientAdminId': {
+      id: '/_authenticated/_app/client-admins/$clientAdminId'
+      path: '/client-admins/$clientAdminId'
+      fullPath: '/client-admins/$clientAdminId'
+      preLoaderRoute: typeof AuthenticatedAppClientAdminsClientAdminIdRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/_app/claims/$claimId': {
       id: '/_authenticated/_app/claims/$claimId'
       path: '/$claimId'
       fullPath: '/claims/$claimId'
       preLoaderRoute: typeof AuthenticatedAppClaimsClaimIdRouteImport
       parentRoute: typeof AuthenticatedAppClaimsRoute
+    }
+    '/_authenticated/_app/agents/$agentId': {
+      id: '/_authenticated/_app/agents/$agentId'
+      path: '/agents/$agentId'
+      fullPath: '/agents/$agentId'
+      preLoaderRoute: typeof AuthenticatedAppAgentsAgentIdRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
     }
   }
 }
@@ -455,12 +552,29 @@ const AuthenticatedAppInsurersRouteWithChildren =
     AuthenticatedAppInsurersRouteChildren,
   )
 
+interface AuthenticatedAppUsersRouteChildren {
+  AuthenticatedAppUsersIndexRoute: typeof AuthenticatedAppUsersIndexRoute
+}
+
+const AuthenticatedAppUsersRouteChildren: AuthenticatedAppUsersRouteChildren = {
+  AuthenticatedAppUsersIndexRoute: AuthenticatedAppUsersIndexRoute,
+}
+
+const AuthenticatedAppUsersRouteWithChildren =
+  AuthenticatedAppUsersRoute._addFileChildren(
+    AuthenticatedAppUsersRouteChildren,
+  )
+
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppClaimsRoute: typeof AuthenticatedAppClaimsRouteWithChildren
   AuthenticatedAppClientsRoute: typeof AuthenticatedAppClientsRouteWithChildren
   AuthenticatedAppInsurersRoute: typeof AuthenticatedAppInsurersRouteWithChildren
   AuthenticatedAppNewClaimRoute: typeof AuthenticatedAppNewClaimRoute
+  AuthenticatedAppUsersRoute: typeof AuthenticatedAppUsersRouteWithChildren
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+  AuthenticatedAppAgentsAgentIdRoute: typeof AuthenticatedAppAgentsAgentIdRoute
+  AuthenticatedAppClientAdminsClientAdminIdRoute: typeof AuthenticatedAppClientAdminsClientAdminIdRoute
+  AuthenticatedAppEmployeesEmployeeIdRoute: typeof AuthenticatedAppEmployeesEmployeeIdRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
@@ -468,7 +582,13 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppClientsRoute: AuthenticatedAppClientsRouteWithChildren,
   AuthenticatedAppInsurersRoute: AuthenticatedAppInsurersRouteWithChildren,
   AuthenticatedAppNewClaimRoute: AuthenticatedAppNewClaimRoute,
+  AuthenticatedAppUsersRoute: AuthenticatedAppUsersRouteWithChildren,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+  AuthenticatedAppAgentsAgentIdRoute: AuthenticatedAppAgentsAgentIdRoute,
+  AuthenticatedAppClientAdminsClientAdminIdRoute:
+    AuthenticatedAppClientAdminsClientAdminIdRoute,
+  AuthenticatedAppEmployeesEmployeeIdRoute:
+    AuthenticatedAppEmployeesEmployeeIdRoute,
 }
 
 const AuthenticatedAppRouteWithChildren =

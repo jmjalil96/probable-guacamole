@@ -116,6 +116,18 @@ async function seed() {
     { resource: "clients", action: "create" },
     { resource: "clients", action: "edit" },
     { resource: "clients", action: "delete" },
+    { resource: "employees", action: "read" },
+    { resource: "employees", action: "create" },
+    { resource: "employees", action: "edit" },
+    { resource: "employees", action: "delete" },
+    { resource: "agents", action: "read" },
+    { resource: "agents", action: "create" },
+    { resource: "agents", action: "edit" },
+    { resource: "agents", action: "delete" },
+    { resource: "clientAdmins", action: "read" },
+    { resource: "clientAdmins", action: "create" },
+    { resource: "clientAdmins", action: "edit" },
+    { resource: "clientAdmins", action: "delete" },
   ];
 
   const permissions: Record<string, { id: string }> = {};
@@ -1563,7 +1575,7 @@ async function seed() {
 
   console.log("Seeded data summary:");
   console.log("  Roles: 6");
-  console.log("  Permissions: 28");
+  console.log("  Permissions: 40");
   console.log("  Users: 10");
   console.log("  Clients: 3");
   console.log("  Insurers: 2");

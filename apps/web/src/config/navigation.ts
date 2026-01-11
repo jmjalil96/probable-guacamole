@@ -4,6 +4,7 @@ import {
   FileText,
   Building2,
   Users,
+  UserCog,
   type LucideIcon,
 } from "lucide-react";
 
@@ -39,5 +40,10 @@ export const navigation: NavItem[] = [
     label: "Clientes",
     to: "/clients",
     icon: Users,
+  },
+  {
+    label: "Usuarios",
+    to: "/users",
+    icon: UserCog,
   },
 ];

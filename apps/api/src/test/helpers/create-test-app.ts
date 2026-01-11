@@ -5,6 +5,10 @@ import { claimsRouter } from "../../features/claims/index.js";
 import { clientsRouter } from "../../features/clients/index.js";
 import { insurersRouter } from "../../features/insurers/index.js";
 import { invitationRouter } from "../../features/invitation/index.js";
+import { usersRouter } from "../../features/users/index.js";
+import { employeesRouter } from "../../features/employees/index.js";
+import { agentsRouter } from "../../features/agents/index.js";
+import { clientAdminsRouter } from "../../features/client-admins/index.js";
 import { errorHandler } from "../../middleware/error-handler.js";
 
 /**
@@ -30,6 +34,10 @@ export function createTestApp(): Express {
   app.use("/claims", claimsRouter);
   app.use("/clients", clientsRouter);
   app.use("/insurers", insurersRouter);
+  app.use("/users", usersRouter);
+  app.use("/employees", employeesRouter);
+  app.use("/agents", agentsRouter);
+  app.use("/client-admins", clientAdminsRouter);
 
   // Error handler must be last
   app.use(errorHandler);
